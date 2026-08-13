@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ziad Arafat · live portals</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Manrope:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -378,7 +377,7 @@
   <!-- brand -->
   <div class="brand-bar">
     <div class="brand">ZA / PM <small>· live portals</small></div>
-    <div class="hub-tag">⏺ 5 iframe previews</div>
+    
   </div>
 
   <!-- heading -->
@@ -405,7 +404,7 @@
         <h3>About Ziad</h3>
         <p>PMP, LSS Black Belt, project lead. Riyadh-based, ERP, ops, procurement.</p>
         <a href="https://b3dl4m-7.github.io/Ziad_Arafat_Naduvakkattil/1" class="portal-link" target="_blank">Go to About <span class="arrow">→</span></a>
-        <span class="placeholder-badge">🔗 live link</span>
+        
       </div>
     </div>
 
@@ -424,7 +423,7 @@
         <h3>Programs &amp; delivery</h3>
         <p>Odoo ERP, factory expansion, digital WebApp, USD 500K+ procurement.</p>
         <a href="https://b3dl4m-7.github.io/Ziad_Arafat_Naduvakkattil/2" class="portal-link" target="_blank">See Work <span class="arrow">→</span></a>
-        <span class="placeholder-badge">🔗 live link</span>
+        
       </div>
     </div>
 
@@ -443,7 +442,7 @@
         <h3>Career track</h3>
         <p>Project coordinator → transformation lead, BD, procurement, HR, ops.</p>
         <a href="https://b3dl4m-7.github.io/Ziad_Arafat_Naduvakkattil/3" class="portal-link" target="_blank">View Experience <span class="arrow">→</span></a>
-        <span class="placeholder-badge">🔗 live link</span>
+        
       </div>
     </div>
 
@@ -462,38 +461,24 @@
         <h3>ERP &amp; methods</h3>
         <p>Odoo program, Lean Six Sigma, PMP, creative &amp; technical stack.</p>
         <a href="https://b3dl4m-7.github.io/Ziad_Arafat_Naduvakkattil/4" class="portal-link" target="_blank">Explore Systems <span class="arrow">→</span></a>
-        <span class="placeholder-badge">🔗 live link</span>
+        
       </div>
     </div>
 
     <!-- 5. Contact -->
-    <div class="window-card">
-      <div class="card-header">
-        <span class="dot"></span>
-        <span class="label">/contact</span>
-        <span class="badge">live</span>
-      </div>
-      <div class="preview-box">
-        <iframe src="https://b3dl4m-7.github.io/Ziad_Arafat_Naduvakkattil/5" title="Contact preview" scrolling="no"></iframe>
-        <div class="fallback-message">⛔ preview blocked · click link below</div>
-      </div>
-      <div class="card-footer">
-        <h3>Let's talk</h3>
-        <p>Riyadh, KSA · email, phone, direct CV download. Ready to build.</p>
-        <a href="https://b3dl4m-7.github.io/Ziad_Arafat_Naduvakkattil/5" class="portal-link" target="_blank">Contact <span class="arrow">→</span></a>
-        <span class="placeholder-badge">🔗 live link</span>
-      </div>
-    </div>
+    
   </div>
 
   <!-- hint -->
   <div class="hint-box">
     <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
       <span class="hint-icon">i</span>
-      <span class="hint-text">Each iframe is scaled to show the full homepage. Scrolling is disabled — you see the whole page at a glance.</span>
+      <div></div>
+
+<span class="hint-text">Click on a Design you liked to view it in full!</span>
     </div>
     <div style="display:flex; gap:8px;">
-      <span style="background:rgba(110,207,196,0.02); padding:3px 14px; border-radius:999px; font-size:10px; border:1px solid rgba(110,207,196,0.04); color:var(--muted);">5 live windows</span>
+      
     </div>
   </div>
 
@@ -507,5 +492,43 @@
     </span>
   </div>
 </div>
-</body>
-</html>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+
+</body></html>
