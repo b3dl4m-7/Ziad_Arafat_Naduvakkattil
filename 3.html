@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ziad Arafat · Project Manager</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Space+Mono:wght@400;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+  <style>
+    /* ----- THEME VARIABLES (new palette) ----- */
+    :root {
+      --bg-deep: #0b0d14;
+      --bg-surface: #12161f;
+      --bg-elevated: #1a1f2b;
+      --bg-card: rgba(255,255,255,0.04);
+      --border-subtle: rgba(255,255,255,0.06);
+      --border-soft: rgba(255,255,255,0.10);
+      --text-primary: #f0f3fa;
+      --text-secondary: #a3adc9;
+      --text-tertiary: #6b7799;
+      --accent-gold: #e9c87c;
+      --accent-gold-dim: rgba(233,200,124,0.15);
+      --accent-blue: #7bb3ff;
+      --accent-blue-dim: rgba(123,179,255,0.12);
+      --shadow-card: 0 20px 40px -12px rgba(0,0,0,0.5);
+      --radius-card: 24px;
+      --radius-pill: 999px;
+      --transition-smooth: cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    [data-theme="light"] {
+      --bg-deep: #f2f5fc;
+      --bg-surface: #e6ecf7;
+      --bg-elevated: #d5dceb;
+      --bg-card: rgba(255,255,255,0.6);
+      --border-subtle: rgba(0,0,0,0.06);
+      --border-soft: rgba(0,0,0,0.10);
+      --text-primary: #0f1420;
+      --text-secondary: #2f3a55;
+      --text-tertiary: #5f6b87;
+      --accent-gold: #b48b3a;
+      --accent-gold-dim: rgba(180,139,58,0.12);
+      --accent-blue: #2a7de1;
+      --accent-blue-dim: rgba(42,125,225,0.10);
+      --shadow-card: 0 20px 40px -12px rgba(0,0,0,0.10);
+    }
+
+    /* ----- RESET & BASE ----- */
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { background: var(--bg-deep); transition: background 0.5s ease; scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      line-height: 1.5;
+      transition: background 0.5s, color 0.4s;
+    }
+    ::selection { background: var(--accent-gold); color: #0b0d14; }
+
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ----- UTILITY ----- */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    .section-pad { padding: 100px 0; }
+    .flex-center { display: flex; align-items: center; justify-content: center; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+
+    .eyebrow {
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .eyebrow::before {
+      content: '';
+      width: 28px;
+      height: 1.5px;
+      background: var(--accent-gold);
+      display: inline-block;
+    }
+    [lang="ar"] .eyebrow::before { display: none; }
+    [lang="ar"] .eyebrow::after {
+      content: '';
+      width: 28px;
+      height: 1.5px;
+      background: var(--accent-gold);
+      display: inline-block;
+    }
+
+    .heading-lg {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: clamp(36px, 6vw, 64px);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+    .heading-md {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.2;
+    }
+    .text-glow { background: linear-gradient(135deg, var(--accent-gold), var(--accent-blue)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+    /* ----- GLASS CARD (new) ----- */
+    .card-glass {
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-card);
+      transition: background 0.4s, border-color 0.4s, transform 0.4s var(--transition-smooth);
+    }
+    .card-glass:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.18); }
+
+    /* ----- NAV (minimalist pill) ----- */
+    .navbar {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-pill);
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: var(--shadow-card);
+      transition: background 0.4s, border-color 0.4s;
+    }
+    .navbar a {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      padding: 8px 18px;
+      border-radius: var(--radius-pill);
+      transition: 0.3s;
+      white-space: nowrap;
+    }
+    .navbar a:hover { color: var(--text-primary); background: var(--bg-card); }
+    .navbar a.active { color: #0b0d14; background: var(--accent-gold); font-weight: 600; }
+    .navbar .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent-gold);
+      margin: 0 6px;
+      flex-shrink: 0;
+    }
+    .navbar .actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: 8px;
+    }
+    .navbar .actions button {
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-pill);
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: 0.3s;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-card);
+    }
+    .navbar .actions button:hover { background: var(--bg-elevated); color: var(--text-primary); }
+    .theme-toggle { font-size: 18px; padding: 6px 10px !important; line-height: 1; }
+    @media (max-width: 820px) {
+      .navbar { padding: 8px 12px; max-width: 96vw; overflow-x: auto; scrollbar-width: none; gap: 4px; }
+      .navbar::-webkit-scrollbar { display: none; }
+      .navbar a { font-size: 11px; padding: 6px 12px; }
+      .navbar .dot { display: none; }
+      .navbar .actions button { font-size: 11px; padding: 4px 10px; }
+    }
+
+    /* ----- HERO (new) ----- */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 120px 0 60px;
+      position: relative;
+      overflow: hidden;
+    }
+    #hero .bg-orb {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, var(--accent-gold-dim), transparent 70%);
+      top: -20%;
+      right: -10%;
+      pointer-events: none;
+      filter: blur(80px);
+      opacity: 0.6;
+    }
+    #hero .bg-orb-2 {
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 70% 70%, var(--accent-blue-dim), transparent 70%);
+      bottom: -20%;
+      left: -10%;
+      pointer-events: none;
+      filter: blur(80px);
+      opacity: 0.4;
+    }
+    .hero-content { position: relative; z-index: 2; max-width: 800px; }
+    .hero-content .eyebrow { margin-bottom: 20px; }
+    .hero-content h1 { margin: 16px 0 24px; }
+    .hero-content h1 .highlight { display: block; font-weight: 400; }
+    .hero-content p { font-size: 18px; color: var(--text-secondary); max-width: 560px; line-height: 1.7; }
+    .hero-actions { margin-top: 40px; display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 16px 32px; border-radius: var(--radius-pill);
+      font-weight: 600; font-size: 14px;
+      transition: 0.4s var(--transition-smooth);
+      border: none; cursor: pointer;
+    }
+    .btn-primary { background: var(--accent-gold); color: #0b0d14; box-shadow: 0 8px 24px rgba(233,200,124,0.25); }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(233,200,124,0.35); }
+    .btn-ghost { background: var(--bg-card); border: 1px solid var(--border-soft); color: var(--text-primary); }
+    .btn-ghost:hover { background: var(--bg-elevated); transform: translateY(-3px); }
+
+    /* scroll indicator */
+    .scroll-indicator {
+      position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.15em;
+      color: var(--text-tertiary);
+    }
+    .scroll-indicator .line { width: 1px; height: 40px; background: linear-gradient(var(--accent-gold), transparent); animation: scrollPulse 2s ease-in-out infinite; }
+    @keyframes scrollPulse { 0% { transform: scaleY(0.2); transform-origin: top; } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform-origin: bottom; } 100% { transform: scaleY(0.2); transform-origin: bottom; } }
+
+    /* ----- STATS (minimal) ----- */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border-subtle);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      margin-top: 60px;
+    }
+    .stat-item {
+      background: var(--bg-card);
+      padding: 28px 20px;
+      text-align: center;
+    }
+    .stat-item .number { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 600; color: var(--accent-gold); }
+    .stat-item .label { font-size: 13px; color: var(--text-tertiary); margin-top: 6px; }
+    @media (max-width: 700px) { .stats-grid { grid-template-columns: 1fr 1fr; } }
+
+    /* ----- ABOUT (new layout) ----- */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: start;
+    }
+    .about-text p { font-size: 17px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 20px; }
+    .about-text strong { color: var(--text-primary); font-weight: 600; }
+    .about-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+    .about-tags span {
+      padding: 8px 18px; border-radius: var(--radius-pill);
+      background: var(--bg-card); border: 1px solid var(--border-subtle);
+      font-size: 13px; color: var(--text-secondary);
+    }
+    @media (max-width: 860px) { .about-grid { grid-template-columns: 1fr; gap: 30px; } }
+
+    /* ----- EXPERIENCE (timeline) ----- */
+    .timeline { position: relative; padding-left: 36px; }
+    .timeline::before {
+      content: ''; position: absolute; left: 6px; top: 8px; bottom: 8px;
+      width: 1.5px; background: linear-gradient(var(--accent-gold), transparent 80%);
+      opacity: 0.5;
+    }
+    .tl-item { position: relative; padding-bottom: 48px; }
+    .tl-item:last-child { padding-bottom: 0; }
+    .tl-item::before {
+      content: ''; position: absolute; left: -36px; top: 6px;
+      width: 14px; height: 14px; border-radius: 50%;
+      background: var(--bg-deep); border: 2px solid var(--accent-gold);
+      box-shadow: 0 0 0 4px var(--bg-card);
+    }
+    .tl-card { padding: 28px 32px; }
+    .tl-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px 20px; margin-bottom: 4px; }
+    .tl-role { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; }
+    .tl-date { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--accent-gold); letter-spacing: 0.04em; }
+    .tl-company { font-size: 14px; color: var(--text-tertiary); margin-bottom: 14px; }
+    .tl-company b { color: var(--text-primary); font-weight: 600; }
+    .tl-card ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .tl-card li { font-size: 14px; line-height: 1.6; color: var(--text-secondary); padding-left: 20px; position: relative; }
+    .tl-card li::before { content: '▹'; position: absolute; left: 0; color: var(--accent-gold); }
+    .tl-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .tl-tags span {
+      font-size: 11px; padding: 4px 12px; border-radius: var(--radius-pill);
+      background: var(--bg-card); border: 1px solid var(--border-subtle);
+      color: var(--text-tertiary);
+    }
+
+    /* ----- ACHIEVEMENTS (masonry-like) ----- */
+    .achieve-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 20px;
+    }
+    .achieve-card { padding: 28px 26px; transition: transform 0.4s var(--transition-smooth); }
+    .achieve-card:hover { transform: translateY(-6px); }
+    .achieve-card .num { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--accent-gold); opacity: 0.6; }
+    .achieve-card p { margin-top: 12px; font-size: 14.5px; line-height: 1.6; color: var(--text-secondary); }
+    .achieve-card p strong { color: var(--text-primary); }
+    .achieve-card.wide { grid-column: span 2; }
+    .achieve-events { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+    .achieve-events span {
+      font-size: 10px; padding: 4px 10px; border-radius: var(--radius-pill);
+      background: var(--bg-card); border: 1px solid var(--border-subtle);
+      color: var(--text-tertiary);
+    }
+    @media (max-width: 900px) { .achieve-grid { grid-template-columns: 1fr 1fr; } .achieve-card.wide { grid-column: span 2; } }
+    @media (max-width: 600px) { .achieve-grid { grid-template-columns: 1fr; } .achieve-card.wide { grid-column: span 1; } }
+
+    /* ----- CREDENTIALS (two col) ----- */
+    .cred-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .cred-card { padding: 32px; }
+    .cred-card h4 { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.12em; color: var(--accent-gold); text-transform: uppercase; margin-bottom: 24px; }
+    .cred-entry { display: flex; gap: 16px; padding: 14px 0; border-top: 1px solid var(--border-subtle); }
+    .cred-entry:first-of-type { border-top: none; padding-top: 0; }
+    .cred-icon { width: 44px; height: 44px; border-radius: 14px; background: var(--accent-gold-dim); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .cred-entry h5 { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+    .cred-entry p { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+    .cred-entry .year { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-tertiary); display: block; margin-top: 4px; }
+    @media (max-width: 860px) { .cred-grid { grid-template-columns: 1fr; } }
+
+    /* ----- SKILLS (pill cloud) ----- */
+    .skills-grid { display: grid; grid-template-columns: 1.4fr 1fr 0.8fr; gap: 24px; }
+    .skill-card { padding: 32px; }
+    .skill-card h4 { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.12em; color: var(--accent-gold); text-transform: uppercase; margin-bottom: 20px; }
+    .pill-cloud { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pill-cloud span {
+      padding: 8px 16px; border-radius: var(--radius-pill);
+      background: var(--bg-card); border: 1px solid var(--border-subtle);
+      font-size: 13px; color: var(--text-secondary);
+      transition: 0.3s;
+    }
+    .pill-cloud span:hover { color: var(--text-primary); border-color: var(--accent-gold); transform: translateY(-2px); }
+    .lang-list { display: flex; flex-direction: column; gap: 6px; }
+    .lang-row { display: flex; justify-content: space-between; padding: 10px 0; border-top: 1px solid var(--border-subtle); }
+    .lang-row:first-of-type { border-top: none; }
+    .lang-row .lname { font-weight: 600; font-size: 14px; }
+    .lang-row .llevel { font-size: 11px; color: var(--accent-gold); font-family: 'Space Mono', monospace; letter-spacing: 0.06em; }
+    @media (max-width: 900px) { .skills-grid { grid-template-columns: 1fr; } }
+
+    /* ----- CONTACT (centered) ----- */
+    .contact-card { padding: 60px 40px; text-align: center; }
+    .contact-card h2 { margin: 16px 0; }
+    .contact-card .sub { color: var(--text-secondary); max-width: 480px; margin: 0 auto 32px; font-size: 17px; }
+    .contact-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; }
+    .clink {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 24px; border-radius: var(--radius-pill);
+      background: var(--bg-card); border: 1px solid var(--border-soft);
+      font-size: 14px; font-weight: 500;
+      transition: 0.3s var(--transition-smooth);
+    }
+    .clink:hover { transform: translateY(-4px); background: var(--bg-elevated); border-color: var(--accent-gold); }
+
+    /* ----- FOOTER ----- */
+    footer { text-align: center; padding: 40px 24px 60px; color: var(--text-tertiary); font-size: 12px; font-family: 'Space Mono', monospace; border-top: 1px solid var(--border-subtle); margin-top: 40px; }
+
+    /* ----- RTL OVERRIDES ----- */
+    [lang="ar"] .timeline { padding-left: 0; padding-right: 36px; }
+    [lang="ar"] .timeline::before { left: auto; right: 6px; }
+    [lang="ar"] .tl-item::before { left: auto; right: -36px; }
+    [lang="ar"] .tl-card li { padding-left: 0; padding-right: 20px; }
+    [lang="ar"] .tl-card li::before { left: auto; right: 0; }
+
+    /* reveal animation */
+    .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.9s cubic-bezier(0.23,1,0.32,1), transform 1s cubic-bezier(0.23,1,0.32,1); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-d1 { transition-delay: 0.08s; }
+    .reveal-d2 { transition-delay: 0.16s; }
+    .reveal-d3 { transition-delay: 0.24s; }
+    .reveal-d4 { transition-delay: 0.32s; }
+
+    @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="navbar" id="navbar">
+    <span class="dot"></span>
+    <a href="#hero" class="active" data-key="nav-home">Home</a>
+    <a href="#about" data-key="nav-about">About</a>
+    <a href="#experience" data-key="nav-experience">Experience</a>
+    <a href="#achievements" data-key="nav-achievements">Achievements</a>
+    <a href="#credentials" data-key="nav-credentials">Credentials</a>
+    <a href="#contact" data-key="nav-contact">Contact</a>
+    <div class="actions">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌓</button>
+      <button id="langToggle">EN / عربي</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="bg-orb"></div>
+    <div class="bg-orb-2"></div>
+    <div class="container hero-content">
+      <span class="eyebrow" data-key="hero-badge">Project Manager · PMP® · LSS Black Belt</span>
+      <h1 class="heading-lg">
+        Ziad Arafat
+        <span class="highlight text-glow">Naduvakkattil</span>
+      </h1>
+      <p data-key="hero-desc">Project Manager with 4+ years leading cross-functional initiatives across business development, procurement and enterprise systems — from a $500K+ facility expansion to owning a company-wide Odoo ERP transformation end to end.</p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn btn-primary" data-key="cta-talk">Let's talk</a>
+        <a href="#experience" class="btn btn-ghost" data-key="cta-exp">View experience</a>
+      </div>
+    </div>
+    <div class="scroll-indicator">
+      <span data-key="scroll">SCROLL</span>
+      <span class="line"></span>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item"><div class="number">4+</div><div class="label" data-key="stat1">Years experience</div></div>
+      <div class="stat-item"><div class="number">$500K+</div><div class="label" data-key="stat2">Sourcing &amp; procurement</div></div>
+      <div class="stat-item"><div class="number">6</div><div class="label" data-key="stat3">Odoo modules unified</div></div>
+      <div class="stat-item"><div class="number">SAR 1M</div><div class="label" data-key="stat4">High-ticket sales</div></div>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section id="about" class="section-pad">
+    <div class="container">
+      <div class="about-grid">
+        <div class="reveal">
+          <span class="eyebrow" data-key="about-eyebrow">Profile</span>
+          <h2 class="heading-md" style="margin: 20px 0 16px;" data-key="about-title">Built for turning plans into delivered outcomes.</h2>
+          <div class="about-text">
+            <p data-key="about-p1">Results-driven <strong>Project Manager</strong>, <strong>PMI PMP®</strong> and <strong>Lean Six Sigma Black Belt</strong> certified, with a track record of steering strategic initiatives from scoping through delivery. Experience spans enterprise system implementation, procurement and supply chain optimisation, financial oversight and cross-functional team leadership.</p>
+            <p data-key="about-p2">Currently serving as <strong>Project Owner</strong> for a company-wide <strong>Odoo ERP</strong> transformation, and previously planned and delivered a full production-facility expansion, coordinated global sourcing exceeding <strong>$500K</strong>, and closed high-ticket engagements worth up to <strong>SAR 1M</strong> with VIP, government and corporate clients.</p>
+          </div>
+          <div class="about-tags">
+            <span>PMP®</span><span>LSS Black Belt</span><span>ERP Implementation</span><span>Business Strategy</span>
+          </div>
+        </div>
+        <div class="card-glass" style="padding: 40px; align-self: center;" data-reveal>
+          <div style="font-size: 72px; margin-bottom: 16px;">⚡</div>
+          <h3 style="font-family: 'Playfair Display', serif; font-size: 28px; margin-bottom: 12px;" data-key="about-quote">"Delivering impact, one project at a time."</h3>
+          <p style="color: var(--text-secondary); font-size: 15px;" data-key="about-quote-sub">Cross-functional leadership · Strategic execution · Enterprise systems</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience" class="section-pad" style="background: var(--bg-surface); transition: background 0.5s;">
+    <div class="container">
+      <div class="reveal" style="margin-bottom: 56px;">
+        <span class="eyebrow" data-key="exp-eyebrow">Career Path</span>
+        <h2 class="heading-md" style="margin-top: 12px;" data-key="exp-title">Experience</h2>
+      </div>
+      <div class="timeline">
+        <!-- item 1 -->
+        <div class="tl-item reveal">
+          <div class="card-glass tl-card">
+            <div class="tl-head"><span class="tl-role" data-key="exp1-role">Business Development Executive</span><span class="tl-date" data-key="exp1-date">JUN 2023 — PRESENT</span></div>
+            <div class="tl-company"><b>ERTQA Company for Advertising</b> · Riyadh, Saudi Arabia</div>
+            <ul>
+              <li data-key="exp1-li1">Acting as <strong>Project Owner</strong> for a company-wide Odoo ERP implementation, coordinating consultants and developers to unify Finance, Marketing, Purchase, Production, HR and CRM into one system.</li>
+              <li data-key="exp1-li2">Driving strategic business development by identifying growth opportunities, applying analytical skills to solve challenges, and managing special projects with cross-functional teams.</li>
+              <li data-key="exp1-li3">Developing business plans aligned with organisational goals and leading procurement to establish cost-efficient supply chains.</li>
+              <li data-key="exp1-li4">Building strong client relationships to foster long-term partnerships while overseeing financial performance to optimise profitability.</li>
+            </ul>
+            <div class="tl-tags"><span>Project Ownership</span><span>ERP Implementation</span><span>Stakeholder Management</span></div>
+          </div>
+        </div>
+        <!-- item 2 -->
+        <div class="tl-item reveal reveal-d1">
+          <div class="card-glass tl-card">
+            <div class="tl-head"><span class="tl-role" data-key="exp2-role">Procurement Specialist</span><span class="tl-date" data-key="exp2-date">FEB 2023 — JUN 2023</span></div>
+            <div class="tl-company"><b>ERTQA Company for Advertising</b> · Riyadh, Saudi Arabia</div>
+            <ul>
+              <li data-key="exp2-li1">Analysed purchasing data to optimise procurement processes, ensuring cost-effective acquisition of goods and services.</li>
+              <li data-key="exp2-li2">Collaborated with internal teams and suppliers to negotiate contracts, monitor performance, and meet contract terms.</li>
+              <li data-key="exp2-li3">Utilised data analysis tools to enhance supply chain operations.</li>
+              <li data-key="exp2-li4">Contributed to cost analysis and set benchmarks for procurement efficiency.</li>
+            </ul>
+            <div class="tl-tags"><span>Vendor Negotiation</span><span>Cost Analysis</span></div>
+          </div>
+        </div>
+        <!-- item 3 -->
+        <div class="tl-item reveal reveal-d2">
+          <div class="card-glass tl-card">
+            <div class="tl-head"><span class="tl-role" data-key="exp3-role">HR Recruitment Coordinator</span><span class="tl-date" data-key="exp3-date">SEP 2022 — JAN 2023</span></div>
+            <div class="tl-company"><b>ERTQA Company for Advertising</b> · Riyadh, Saudi Arabia</div>
+            <ul>
+              <li data-key="exp3-li1">Successfully sourced top-tier candidates through talent scouting and recruiting, optimising hiring and interview processes.</li>
+              <li data-key="exp3-li2">Developed and implemented tailored recruitment strategies aligned with organisational goals, delivering results efficiently.</li>
+            </ul>
+            <div class="tl-tags"><span>Talent Acquisition</span></div>
+          </div>
+        </div>
+        <!-- item 4 -->
+        <div class="tl-item reveal reveal-d3">
+          <div class="card-glass tl-card">
+            <div class="tl-head"><span class="tl-role" data-key="exp4-role">Project Coordinator</span><span class="tl-date" data-key="exp4-date">SEP 2021 — AUG 2022</span></div>
+            <div class="tl-company"><b>MITS SkillPark</b> · Palakkad, India</div>
+            <ul>
+              <li data-key="exp4-li1">Planned, executed and oversaw completion of specific projects, ensuring on-time, in-scope, on-budget delivery.</li>
+              <li data-key="exp4-li2">Coordinated cross-functional teams across departments to ensure effective collaboration throughout the project life cycle.</li>
+            </ul>
+            <div class="tl-tags"><span>Project Planning</span><span>Team Coordination</span></div>
+          </div>
+        </div>
+        <!-- item 5 -->
+        <div class="tl-item reveal reveal-d4">
+          <div class="card-glass tl-card">
+            <div class="tl-head"><span class="tl-role" data-key="exp5-role">Assistant Graphic Designer (Internship)</span><span class="tl-date" data-key="exp5-date">APR 2019</span></div>
+            <div class="tl-company"><b>ERTQA Creative Printing Solutions</b> · Riyadh, Saudi Arabia</div>
+            <ul><li data-key="exp5-li1">Worked with marketing and design teams to create visual materials, supporting lead designers to ensure workflow efficiency.</li></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACHIEVEMENTS (includes Odoo) -->
+  <section id="achievements" class="section-pad">
+    <div class="container">
+      <div class="reveal" style="margin-bottom: 48px;">
+        <span class="eyebrow" data-key="ach-eyebrow">Impact</span>
+        <h2 class="heading-md" style="margin-top: 12px;" data-key="ach-title">Key Achievements</h2>
+      </div>
+      <div class="achieve-grid">
+        <div class="card-glass achieve-card wide reveal">
+          <span class="num">01</span>
+          <p data-key="ach1">Serving as <strong style="color:var(--text-primary)">Project Owner</strong> for a bespoke Odoo ERP build spanning Finance, Marketing, Purchase, Production, HR and CRM — managing consultants, developers, timeline and company-wide change adoption.</p>
+        </div>
+        <div class="card-glass achieve-card reveal reveal-d1">
+          <span class="num">02</span>
+          <p data-key="ach2">Planned, designed and facilitated expansion to a larger production facility, creating the sub-brand <strong style="color:var(--text-primary)">ERTQA for Factory</strong>.</p>
+        </div>
+        <div class="card-glass achieve-card reveal reveal-d2">
+          <span class="num">03</span>
+          <p data-key="ach3">Led talent acquisition and recruitment initiatives to meet the demands of business expansion.</p>
+        </div>
+        <div class="card-glass achieve-card reveal reveal-d1">
+          <span class="num">04</span>
+          <p data-key="ach4">Facilitated machinery and materials sourcing, negotiation, logistics and financing exceeding <strong style="color:var(--text-primary)">$500K</strong> over a 12–16 month period.</p>
+        </div>
+        <div class="card-glass achieve-card wide reveal reveal-d2">
+          <span class="num">05</span>
+          <p data-key="ach5">Represented the firm locally and overseas at industry exhibitions, scouting innovation and building supplier and client relationships.</p>
+          <div class="achieve-events">
+            <span>SouthPrint / SinoPack / SinoLabel 2025 — Guangzhou</span>
+            <span>DRUPA 2024 — Düsseldorf</span>
+            <span>Canton Fair 2024 — Guangzhou</span>
+            <span>FESPA Middle East 2024 — Dubai</span>
+            <span>Royal Selangor 2024 — Kuala Lumpur</span>
+            <span>SignChina 2023 — Shanghai</span>
+          </div>
+        </div>
+        <div class="card-glass achieve-card reveal">
+          <span class="num">06</span>
+          <p data-key="ach6">Designed a custom web-app for factory management with a developer, tailored to production management needs.</p>
+        </div>
+        <div class="card-glass achieve-card reveal reveal-d1">
+          <span class="num">07</span>
+          <p data-key="ach7">Developed and built a standalone individual sub-brand for innovative 3D-printing solutions.</p>
+        </div>
+        <div class="card-glass achieve-card reveal reveal-d2">
+          <span class="num">08</span>
+          <p data-key="ach8">Closed high-ticket sales for VIP clients, luxury brands, government entities and corporates, with accumulated deal value from <strong style="color:var(--text-primary)">SAR 700K to SAR 1M</strong>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CREDENTIALS -->
+  <section id="credentials" class="section-pad" style="background: var(--bg-surface); transition: background 0.5s;">
+    <div class="container">
+      <div class="reveal" style="margin-bottom: 48px;">
+        <span class="eyebrow" data-key="cert-eyebrow">Credentials</span>
+        <h2 class="heading-md" style="margin-top: 12px;" data-key="cert-title">Certifications &amp; Education</h2>
+      </div>
+      <div class="cred-grid">
+        <div class="card-glass cred-card reveal">
+          <h4 data-key="cert-h4">Certifications</h4>
+          <div class="cred-entry"><div class="cred-icon">🏅</div><div><h5>PMI Project Management Professional (PMP)®</h5><p>Project Management Institute</p></div></div>
+          <div class="cred-entry"><div class="cred-icon">🟢</div><div><h5>Lean Six Sigma Green Belt</h5><p>Process improvement &amp; quality management</p></div></div>
+          <div class="cred-entry"><div class="cred-icon">⚫</div><div><h5>Lean Six Sigma Black Belt</h5><p>Advanced process improvement leadership</p></div></div>
+          <div class="cred-entry"><div class="cred-icon">🔷</div><div><h5>Google Project Management Professional</h5><p>Coursera — 6-course series, 6 months<span class="year">2022</span></p></div></div>
+        </div>
+        <div class="card-glass cred-card reveal reveal-d1">
+          <h4 data-key="edu-h4">Education</h4>
+          <div class="cred-entry"><div class="cred-icon">📘</div><div><h5>ACCA Qualification <span style="color:var(--accent-gold);font-weight:600;">(In progress)</span></h5><p>Association of Chartered Certified Accountants — 8 exams remaining to Affiliate status<span class="year">2022 — Present</span></p></div></div>
+          <div class="cred-entry"><div class="cred-icon">🎓</div><div><h5>Bachelor of Commerce (B.Com)</h5><p>Bharathiyar University, Coimbatore — First Class<span class="year">2022</span></p></div></div>
+          <div class="cred-entry"><div class="cred-icon">🏫</div><div><h5>Higher Secondary (10th &amp; 12th)</h5><p>International Indian School, Riyadh — 10th: 9.6 CGPA · 12th: 80%<span class="year">2017 — 2019</span></p></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills" class="section-pad">
+    <div class="container">
+      <div class="reveal" style="margin-bottom: 48px;">
+        <span class="eyebrow" data-key="skill-eyebrow">Toolkit</span>
+        <h2 class="heading-md" style="margin-top: 12px;" data-key="skill-title">Skills &amp; Software</h2>
+      </div>
+      <div class="skills-grid">
+        <div class="card-glass skill-card reveal">
+          <h4 data-key="skill-prof">Professional</h4>
+          <div class="pill-cloud">
+            <span>Project Management</span><span>Planning &amp; Execution</span><span>Process Improvement</span>
+            <span>Business Development</span><span>Strategic Planning</span><span>Risk &amp; Stakeholder Management</span>
+            <span>Analytical Thinking</span><span>Data Analysis</span><span>Financial Oversight</span>
+            <span>Procurement</span><span>Negotiation</span><span>High Ticket Sales</span>
+            <span>Client Relationship</span><span>Cross-Functional Leadership</span><span>ERP Implementation</span>
+            <span>Organization</span><span>Problem-Solving</span>
+          </div>
+        </div>
+        <div class="card-glass skill-card reveal reveal-d1">
+          <h4 data-key="skill-soft">Software</h4>
+          <div class="pill-cloud">
+            <span>Odoo ERP</span><span>Microsoft Office</span><span>Advanced Excel</span>
+            <span>CRM / ERP Systems</span><span>Tally.ERP 9</span><span>Adobe Photoshop</span>
+            <span>Adobe Illustrator</span><span>Premiere Pro</span><span>CorelDraw</span>
+            <span>Fusion 360</span><span>AutoCAD</span><span>Blender</span>
+          </div>
+        </div>
+        <div class="card-glass skill-card reveal reveal-d2">
+          <h4 data-key="skill-lang">Languages</h4>
+          <div class="lang-list">
+            <div class="lang-row"><span class="lname">English</span><span class="llevel">FLUENT</span></div>
+            <div class="lang-row"><span class="lname">Arabic</span><span class="llevel">PROFICIENT</span></div>
+            <div class="lang-row"><span class="lname">Hindi / Urdu</span><span class="llevel">PROFICIENT</span></div>
+            <div class="lang-row"><span class="lname">Malayalam</span><span class="llevel">NATIVE</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="section-pad" style="background: var(--bg-surface); transition: background 0.5s;">
+    <div class="container">
+      <div class="card-glass contact-card reveal" style="max-width: 820px; margin: 0 auto;">
+        <span class="eyebrow" style="justify-content: center;" data-key="contact-eyebrow">Get in touch</span>
+        <h2 class="heading-md" data-key="contact-title">Ready for the next project.</h2>
+        <p class="sub" data-key="contact-sub">Open to mid-level Project Manager opportunities — reach out directly.</p>
+        <div class="contact-links">
+          <a class="clink" href="tel:+966502723895"><span>📞</span>+966 50 272 3895</a>
+          <a class="clink" href="mailto:ziadarafat.nk@gmail.com"><span>✉️</span>ziadarafat.nk@gmail.com</a>
+          <a class="clink" href="#"><span>📍</span>Riyadh, Saudi Arabia</a>
+          <a class="clink" href="#"><span>🔗</span>LinkedIn — Ziad Arafat</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>ZIAD ARAFAT NADUVAKKATTIL · PROJECT MANAGEMENT PORTFOLIO</footer>
+
+  <script>
+    (function(){
+      // --- THEME ---
+      const themeToggle = document.getElementById('themeToggle');
+      const html = document.documentElement;
+      function setTheme(theme) { html.setAttribute('data-theme', theme); localStorage.setItem('theme', theme); }
+      const savedTheme = localStorage.getItem('theme') || 'dark';
+      setTheme(savedTheme);
+      themeToggle.addEventListener('click', function(){
+        const current = html.getAttribute('data-theme');
+        setTheme(current === 'dark' ? 'light' : 'dark');
+      });
+
+      // --- LANG ---
+      const langToggle = document.getElementById('langToggle');
+      let currentLang = 'en';
+      const translations = {
+        en: {
+          'hero-badge':'Project Manager · PMP® · LSS Black Belt',
+          'hero-desc':'Project Manager with 4+ years leading cross-functional initiatives across business development, procurement and enterprise systems — from a $500K+ facility expansion to owning a company-wide Odoo ERP transformation end to end.',
+          'cta-talk':"Let's talk",
+          'cta-exp':'View experience',
+          'scroll':'SCROLL',
+          'stat1':'Years experience',
+          'stat2':'Sourcing & procurement',
+          'stat3':'Odoo modules unified',
+          'stat4':'High-ticket sales',
+          'about-eyebrow':'Profile',
+          'about-title':'Built for turning plans into delivered outcomes.',
+          'about-p1':'Results-driven <strong>Project Manager</strong>, <strong>PMI PMP®</strong> and <strong>Lean Six Sigma Black Belt</strong> certified, with a track record of steering strategic initiatives from scoping through delivery. Experience spans enterprise system implementation, procurement and supply chain optimisation, financial oversight and cross-functional team leadership.',
+          'about-p2':'Currently serving as <strong>Project Owner</strong> for a company-wide <strong>Odoo ERP</strong> transformation, and previously planned and delivered a full production-facility expansion, coordinated global sourcing exceeding <strong>$500K</strong>, and closed high-ticket engagements worth up to <strong>SAR 1M</strong> with VIP, government and corporate clients.',
+          'about-quote':'Delivering impact, one project at a time.',
+          'about-quote-sub':'Cross-functional leadership · Strategic execution · Enterprise systems',
+          'exp-eyebrow':'Career Path',
+          'exp-title':'Experience',
+          'exp1-role':'Business Development Executive',
+          'exp1-date':'JUN 2023 — PRESENT',
+          'exp1-li1':'Acting as <strong>Project Owner</strong> for a company-wide Odoo ERP implementation, coordinating consultants and developers to unify Finance, Marketing, Purchase, Production, HR and CRM into one system.',
+          'exp1-li2':'Driving strategic business development by identifying growth opportunities, applying analytical skills to solve challenges, and managing special projects with cross-functional teams.',
+          'exp1-li3':'Developing business plans aligned with organisational goals and leading procurement to establish cost-efficient supply chains.',
+          'exp1-li4':'Building strong client relationships to foster long-term partnerships while overseeing financial performance to optimise profitability.',
+          'exp2-role':'Procurement Specialist',
+          'exp2-date':'FEB 2023 — JUN 2023',
+          'exp2-li1':'Analysed purchasing data to optimise procurement processes, ensuring cost-effective acquisition of goods and services.',
+          'exp2-li2':'Collaborated with internal teams and suppliers to negotiate contracts, monitor performance, and meet contract terms.',
+          'exp2-li3':'Utilised data analysis tools to enhance supply chain operations.',
+          'exp2-li4':'Contributed to cost analysis and set benchmarks for procurement efficiency.',
+          'exp3-role':'HR Recruitment Coordinator',
+          'exp3-date':'SEP 2022 — JAN 2023',
+          'exp3-li1':'Successfully sourced top-tier candidates through talent scouting and recruiting, optimising hiring and interview processes.',
+          'exp3-li2':'Developed and implemented tailored recruitment strategies aligned with organisational goals, delivering results efficiently.',
+          'exp4-role':'Project Coordinator',
+          'exp4-date':'SEP 2021 — AUG 2022',
+          'exp4-li1':'Planned, executed and oversaw completion of specific projects, ensuring on-time, in-scope, on-budget delivery.',
+          'exp4-li2':'Coordinated cross-functional teams across departments to ensure effective collaboration throughout the project life cycle.',
+          'exp5-role':'Assistant Graphic Designer (Internship)',
+          'exp5-date':'APR 2019',
+          'exp5-li1':'Worked with marketing and design teams to create visual materials, supporting lead designers to ensure workflow efficiency.',
+          'ach-eyebrow':'Impact',
+          'ach-title':'Key Achievements',
+          'ach1':'Serving as <strong style="color:var(--text-primary)">Project Owner</strong> for a bespoke Odoo ERP build spanning Finance, Marketing, Purchase, Production, HR and CRM — managing consultants, developers, timeline and company-wide change adoption.',
+          'ach2':'Planned, designed and facilitated expansion to a larger production facility, creating the sub-brand <strong style="color:var(--text-primary)">ERTQA for Factory</strong>.',
+          'ach3':'Led talent acquisition and recruitment initiatives to meet the demands of business expansion.',
+          'ach4':'Facilitated machinery and materials sourcing, negotiation, logistics and financing exceeding <strong style="color:var(--text-primary)">$500K</strong> over a 12–16 month period.',
+          'ach5':'Represented the firm locally and overseas at industry exhibitions, scouting innovation and building supplier and client relationships.',
+          'ach6':'Designed a custom web-app for factory management with a developer, tailored to production management needs.',
+          'ach7':'Developed and built a standalone individual sub-brand for innovative 3D-printing solutions.',
+          'ach8':'Closed high-ticket sales for VIP clients, luxury brands, government entities and corporates, with accumulated deal value from <strong style="color:var(--text-primary)">SAR 700K to SAR 1M</strong>.',
+          'cert-eyebrow':'Credentials',
+          'cert-title':'Certifications & Education',
+          'cert-h4':'Certifications',
+          'edu-h4':'Education',
+          'skill-eyebrow':'Toolkit',
+          'skill-title':'Skills & Software',
+          'skill-prof':'Professional',
+          'skill-soft':'Software',
+          'skill-lang':'Languages',
+          'contact-eyebrow':'Get in touch',
+          'contact-title':'Ready for the next project.',
+          'contact-sub':'Open to mid-level Project Manager opportunities — reach out directly.',
+          'nav-home':'Home','nav-about':'About','nav-experience':'Experience','nav-achievements':'Achievements','nav-credentials':'Credentials','nav-contact':'Contact'
+        },
+        ar: {
+          'hero-badge':'إدارة المشاريع · PMP® · الحزام الأسود LSS',
+          'hero-desc':'مدير مشاريع بخبرة تزيد عن 4 سنوات في قيادة المبادرات متعددة الوظائف في تطوير الأعمال والمشتريات والأنظمة المؤسسية — بدءًا من توسعة منشأة بقيمة 500 ألف دولار إلى امتلاك تحول نظام Odoo ERP على مستوى الشركة من البداية إلى النهاية.',
+          'cta-talk':'تواصل معي',
+          'cta-exp':'عرض الخبرات',
+          'scroll':'تمرير',
+          'stat1':'سنوات الخبرة',
+          'stat2':'المشتريات والتوريد',
+          'stat3':'وحدات Odoo الموحدة',
+          'stat4':'مبيعات عالية القيمة',
+          'about-eyebrow':'الملف الشخصي',
+          'about-title':'مصمم لتحويل الخطط إلى نتائج منجزة.',
+          'about-p1':'مدير مشاريع موجه نحو النتائج، حاصل على شهادة <strong>PMI PMP®</strong> و <strong>الحزام الأسود للـ Six Sigma</strong>، مع سجل حافل في قيادة المبادرات الاستراتيجية من مرحلة التخطيط إلى التسليم. تشمل الخبرة تنفيذ الأنظمة المؤسسية، تحسين المشتريات وسلسلة التوريد، الرقابة المالية، وقيادة الفرق متعددة الوظائف.',
+          'about-p2':'يعمل حاليًا كـ <strong>مالك المشروع</strong> لتحويل نظام <strong>Odoo ERP</strong> على مستوى الشركة، وقام سابقًا بتخطيط وتنفيذ توسعة كاملة لمنشأة إنتاج، وتنسيق التوريد العالمي بأكثر من <strong>500 ألف دولار</strong>، وإغلاق صفقات عالية القيمة تصل إلى <strong>1 مليون ريال سعودي</strong> مع عملاء من فئة VIP والحكومة والشركات.',
+          'about-quote':'تقديم الأثر، مشروعًا تلو الآخر.',
+          'about-quote-sub':'قيادة متعددة الوظائف · تنفيذ استراتيجي · أنظمة مؤسسية',
+          'exp-eyebrow':'المسار المهني',
+          'exp-title':'الخبرات',
+          'exp1-role':'مسؤول تطوير الأعمال',
+          'exp1-date':'يونيو 2023 — الحاضر',
+          'exp1-li1':'يعمل كـ <strong>مالك المشروع</strong> لتطبيق Odoo ERP على مستوى الشركة، بتنسيق مع الاستشاريين والمطورين لتوحيد المالية، التسويق، المشتريات، الإنتاج، الموارد البشرية وإدارة العملاء في نظام واحد.',
+          'exp1-li2':'دفع تطوير الأعمال الاستراتيجي من خلال تحديد فرص النمو، وتطبيق المهارات التحليلية لحل التحديات، وإدارة المشاريع الخاصة مع فرق متعددة الوظائف.',
+          'exp1-li3':'تطوير خطط الأعمال المتوافقة مع الأهداف التنظيمية وقيادة المشتريات لإنشاء سلاسل توريد فعالة من حيث التكلفة.',
+          'exp1-li4':'بناء علاقات قوية مع العملاء لتعزيز الشراكات طويلة الأمد مع الإشراف على الأداء المالي لتحسين الربحية.',
+          'exp2-role':'أخصائي مشتريات',
+          'exp2-date':'فبراير 2023 — يونيو 2023',
+          'exp2-li1':'تحليل بيانات الشراء لتحسين عمليات المشتريات وضمان الحصول على السلع والخدمات بتكلفة فعالة.',
+          'exp2-li2':'التعاون مع الفرق الداخلية والموردين للتفاوض على العقود ومراقبة الأداء والالتزام بشروط العقود.',
+          'exp2-li3':'استخدام أدوات تحليل البيانات لتعزيز عمليات سلسلة التوريد.',
+          'exp2-li4':'المساهمة في تحليل التكاليف ووضع معايير لكفاءة المشتريات.',
+          'exp3-role':'منسق توظيف الموارد البشرية',
+          'exp3-date':'سبتمبر 2022 — يناير 2023',
+          'exp3-li1':'نجح في استقطاب أفضل المرشحين من خلال التوظيف والاستقطاب، وتحسين عمليات التوظيف والمقابلات.',
+          'exp3-li2':'تطوير وتنفيذ استراتيجيات توظيف مخصصة تتماشى مع الأهداف التنظيمية، وتحقيق النتائج بكفاءة.',
+          'exp4-role':'منسق مشاريع',
+          'exp4-date':'سبتمبر 2021 — أغسطس 2022',
+          'exp4-li1':'تخطيط وتنفيذ والإشراف على إنجاز مشاريع محددة، مع ضمان التسليم في الوقت المحدد، وفي النطاق، وضمن الميزانية.',
+          'exp4-li2':'تنسيق الفرق متعددة الوظائف عبر الإدارات لضمان التعاون الفعال طوال دورة حياة المشروع.',
+          'exp5-role':'مساعد مصمم جرافيك (تدريب)',
+          'exp5-date':'أبريل 2019',
+          'exp5-li1':'العمل مع فرق التسويق والتصميم لإنشاء مواد بصرية، ودعم المصممين الرئيسيين لضمان كفاءة سير العمل.',
+          'ach-eyebrow':'الأثر',
+          'ach-title':'الإنجازات الرئيسية',
+          'ach1':'يعمل كـ <strong style="color:var(--text-primary)">مالك المشروع</strong> لتطبيق Odoo ERP المخصص الذي يغطي المالية، التسويق، المشتريات، الإنتاج، الموارد البشرية وإدارة العملاء — مع إدارة الاستشاريين والمطورين والجدول الزمني واعتماد التغيير على مستوى الشركة.',
+          'ach2':'تخطيط وتصميم وتسهيل التوسع إلى منشأة إنتاج أكبر، وإنشاء العلامة الفرعية <strong style="color:var(--text-primary)">ERTQA للمصنع</strong>.',
+          'ach3':'قيادة مبادرات استقطاب المواهب والتوظيف لتلبية متطلبات التوسع التجاري.',
+          'ach4':'تسهيل توريد الآلات والمواد، والتفاوض، والخدمات اللوجستية والتمويل بما يتجاوز <strong style="color:var(--text-primary)">500 ألف دولار</strong> على مدى 12-16 شهرًا.',
+          'ach5':'تمثيل الشركة محليًا ودوليًا في المعارض الصناعية، واستكشاف الابتكار وبناء علاقات مع الموردين والعملاء.',
+          'ach6':'تصميم تطبيق ويب مخصص لإدارة المصنع مع مطور، مصمم خصيصًا لتلبية احتياجات إدارة الإنتاج.',
+          'ach7':'تطوير وبناء علامة فرعية فردية مستقلة لحلول الطباعة ثلاثية الأبعاد المبتكرة.',
+          'ach8':'إغلاق مبيعات عالية القيمة لعملاء VIP والعلامات التجارية الفاخرة والجهات الحكومية والشركات، بقيمة تراكمية تتراوح بين <strong style="color:var(--text-primary)">700 ألف إلى 1 مليون ريال سعودي</strong>.',
+          'cert-eyebrow':'الشهادات',
+          'cert-title':'الشهادات و التعليم',
+          'cert-h4':'الشهادات',
+          'edu-h4':'التعليم',
+          'skill-eyebrow':'مجموعة الأدوات',
+          'skill-title':'المهارات والبرمجيات',
+          'skill-prof':'المهارات المهنية',
+          'skill-soft':'البرمجيات',
+          'skill-lang':'اللغات',
+          'contact-eyebrow':'تواصل معي',
+          'contact-title':'جاهز للمشروع القادم.',
+          'contact-sub':'منفتح على فرص إدارة المشاريع للمستوى المتوسط — تواصل مباشرة.',
+          'nav-home':'الرئيسية','nav-about':'الملف','nav-experience':'الخبرات','nav-achievements':'الإنجازات','nav-credentials':'الشهادات','nav-contact':'اتصال'
+        }
+      };
+
+      function setLang(lang) {
+        currentLang = lang;
+        document.documentElement.lang = lang === 'ar' ? 'ar' : 'en';
+        document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+        document.querySelectorAll('[data-key]').forEach(el => {
+          const key = el.getAttribute('data-key');
+          if (translations[lang] && translations[lang][key]) {
+            if (el.tagName === 'BUTTON' || el.tagName === 'A') {
+              if (!el.classList.contains('theme-toggle')) el.textContent = translations[lang][key];
+            } else {
+              el.innerHTML = translations[lang][key];
+            }
+          }
+        });
+        // nav links (already have data-key)
+        langToggle.textContent = lang === 'ar' ? 'EN / عربي' : 'EN / عربي';
+      }
+
+      langToggle.addEventListener('click', function(){
+        setLang(currentLang === 'en' ? 'ar' : 'en');
+      });
+      setLang('en');
+
+      // --- REVEAL OBSERVER ---
+      const reveals = document.querySelectorAll('.reveal');
+      const ro = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+      }, { threshold: 0.12 });
+      reveals.forEach(el => ro.observe(el));
+
+      // --- NAV ACTIVE ---
+      const navLinks = document.querySelectorAll('.navbar a');
+      const sections = document.querySelectorAll('section[id]');
+      const navObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            navLinks.forEach(link => link.classList.remove('active'));
+            const id = entry.target.id;
+            document.querySelector(`.navbar a[href="#${id}"]`)?.classList.add('active');
+          }
+        });
+      }, { threshold: 0.4 });
+      sections.forEach(s => navObserver.observe(s));
+
+      // smooth scroll for nav
+      navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) target.scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+
+    })();
+  </script>
+</body>
+</html>
