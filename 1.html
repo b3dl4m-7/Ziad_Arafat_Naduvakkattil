@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ziad Arafat Naduvakkattil — Business Development &amp; Procurement</title>
+<meta name="description" content="Ziad Arafat Naduvakkattil — Business Development Executive in Riyadh, Saudi Arabia. Procurement, strategic planning, high-ticket sales, finance." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0E1013;
+    --surface:#161A20;
+    --surface-2:#1D2229;
+    --line: rgba(236,232,223,0.12);
+    --line-strong: rgba(236,232,223,0.22);
+    --paper:#ECE8DF;
+    --paper-dim: rgba(236,232,223,0.62);
+    --paper-faint: rgba(236,232,223,0.38);
+    --brass:#C9A227;
+    --brass-soft: rgba(201,162,39,0.14);
+    --teal:#3E6259;
+    --teal-soft: rgba(62,98,89,0.18);
+
+    --display: 'Space Grotesk', sans-serif;
+    --body: 'Inter', sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
+
+    --maxw: 1120px;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--paper);
+    font-family:var(--body);
+    -webkit-font-smoothing:antialiased;
+    line-height:1.5;
+  }
+  img{ max-width:100%; display:block; }
+  a{ color:inherit; text-decoration:none; }
+
+  ::selection{ background:var(--brass); color:var(--ink); }
+
+  .wrap{
+    max-width:var(--maxw);
+    margin:0 auto;
+    padding:0 28px;
+  }
+
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--brass);
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:22px; height:1px;
+    background:var(--brass);
+    display:inline-block;
+  }
+
+  h1,h2,h3{
+    font-family:var(--display);
+    font-weight:600;
+    margin:0;
+    letter-spacing:-0.01em;
+  }
+
+  /* ---------- NAV ---------- */
+  header.nav{
+    position:fixed;
+    top:0; left:0; right:0;
+    z-index:100;
+    background:rgba(14,16,19,0);
+    border-bottom:1px solid transparent;
+    transition:background .35s ease, border-color .35s ease;
+  }
+  header.nav.solid{
+    background:rgba(14,16,19,0.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    max-width:var(--maxw);
+    margin:0 auto;
+    padding:16px 28px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .brand{
+    display:flex; align-items:center; gap:10px;
+    font-family:var(--display);
+    font-weight:600;
+    font-size:15px;
+  }
+  .brand .mark{
+    width:30px; height:30px;
+    border:1px solid var(--brass);
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--brass);
+  }
+  nav.links{
+    display:flex; gap:28px;
+    font-size:14px;
+    color:var(--paper-dim);
+  }
+  nav.links a{ transition:color .2s ease; }
+  nav.links a:hover{ color:var(--paper); }
+  .nav-cta{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:0.04em;
+    border:1px solid var(--line-strong);
+    padding:8px 16px;
+    border-radius:999px;
+    transition:border-color .2s ease, background .2s ease;
+    white-space:nowrap;
+  }
+  .nav-cta:hover{ border-color:var(--brass); background:var(--brass-soft); }
+  .nav-toggle{ display:none; }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    padding:168px 0 96px;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+      radial-gradient(680px 420px at 82% 8%, rgba(201,162,39,0.10), transparent 65%),
+      radial-gradient(520px 420px at 10% 90%, rgba(62,98,89,0.14), transparent 60%);
+    pointer-events:none;
+  }
+  .hero-grid{
+    position:relative;
+    display:grid;
+    grid-template-columns:1.15fr 0.85fr;
+    gap:56px;
+    align-items:center;
+  }
+  .hero h1{
+    font-size:clamp(38px, 5.6vw, 64px);
+    line-height:1.04;
+    margin-top:18px;
+  }
+  .hero .role{
+    font-family:var(--mono);
+    font-size:14px;
+    color:var(--teal);
+    background:var(--teal-soft);
+    display:inline-block;
+    padding:5px 12px;
+    border-radius:999px;
+    margin-top:20px;
+    letter-spacing:0.02em;
+  }
+  .hero p.lede{
+    max-width:52ch;
+    color:var(--paper-dim);
+    font-size:17px;
+    margin-top:22px;
+  }
+  .hero-ctas{
+    margin-top:34px;
+    display:flex; gap:14px; flex-wrap:wrap;
+  }
+  .btn{
+    font-family:var(--mono);
+    font-size:13px;
+    letter-spacing:0.03em;
+    padding:13px 22px;
+    border-radius:999px;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    transition:transform .2s ease, background .2s ease, border-color .2s ease;
+  }
+  .btn-primary{
+    background:var(--brass);
+    color:var(--ink);
+    font-weight:500;
+  }
+  .btn-primary:hover{ transform:translateY(-2px); }
+  .btn-ghost{
+    border:1px solid var(--line-strong);
+    color:var(--paper);
+  }
+  .btn-ghost:hover{ border-color:var(--brass); color:var(--brass); transform:translateY(-2px); }
+
+  /* passport stamp cluster */
+  .stampfield{
+    position:relative;
+    height:400px;
+  }
+  .stamp{
+    position:absolute;
+    width:132px; height:132px;
+    border-radius:50%;
+    border:2px solid var(--paper-faint);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    font-family:var(--mono);
+    color:var(--paper-dim);
+    background:radial-gradient(circle at 50% 40%, var(--surface-2), var(--surface));
+    opacity:0;
+    transform:scale(.7) rotate(var(--r,0deg));
+    animation:stampIn .6s cubic-bezier(.2,.8,.2,1) forwards;
+    animation-delay:var(--d, 0s);
+  }
+  .stamp::before{
+    content:"";
+    position:absolute;
+    inset:8px;
+    border-radius:50%;
+    border:1px dashed rgba(236,232,223,0.22);
+  }
+  .stamp .city{ font-size:11px; letter-spacing:0.04em; color:var(--paper); font-weight:500; }
+  .stamp .yr{ font-size:15px; color:var(--brass); margin-top:4px; letter-spacing:0.06em; }
+  .stamp.s1{ top:0; left:6%; --r:-9deg; --d:.05s; border-color:var(--brass); }
+  .stamp.s2{ top:8%; right:2%; --r:7deg; --d:.15s; }
+  .stamp.s3{ top:42%; left:32%; --r:-4deg; --d:.25s; width:150px; height:150px; border-color:var(--teal); }
+  .stamp.s4{ bottom:6%; left:0; --r:6deg; --d:.35s; }
+  .stamp.s5{ bottom:0; right:14%; --r:-8deg; --d:.45s; }
+  .stamp.s6{ top:36%; right:-2%; --r:11deg; --d:.55s; width:110px; height:110px; }
+  @keyframes stampIn{
+    to{ opacity:1; transform:scale(1) rotate(var(--r,0deg)); }
+  }
+
+  /* ---------- LEDGER STRIP ---------- */
+  .ledger{
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    background:var(--surface);
+  }
+  .ledger .wrap{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+  }
+  .ledger-item{
+    padding:26px 10px;
+    text-align:center;
+    border-left:1px solid var(--line);
+  }
+  .ledger-item:first-child{ border-left:none; }
+  .ledger-item .num{
+    font-family:var(--mono);
+    font-size:clamp(20px,2.4vw,28px);
+    color:var(--brass);
+    letter-spacing:0.01em;
+  }
+  .ledger-item .lbl{
+    margin-top:6px;
+    font-size:11px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--paper-faint);
+    font-family:var(--mono);
+  }
+
+  /* ---------- SECTION SHELL ---------- */
+  section{ padding:104px 0; }
+  .section-head{ max-width:640px; margin-bottom:56px; }
+  .section-head h2{
+    font-size:clamp(26px,3.4vw,38px);
+    margin-top:14px;
+  }
+  .section-head p{ color:var(--paper-dim); margin-top:14px; font-size:16px; }
+
+  .reveal{ opacity:0; transform:translateY(22px); transition:opacity .7s ease, transform .7s ease; }
+  .reveal.in{ opacity:1; transform:none; }
+
+  /* ---------- EXPERIENCE ---------- */
+  .timeline{
+    position:relative;
+    border-left:1px solid var(--line);
+    margin-left:6px;
+  }
+  .tl-item{
+    position:relative;
+    padding:0 0 48px 36px;
+  }
+  .tl-item:last-child{ padding-bottom:0; }
+  .tl-item::before{
+    content:"";
+    position:absolute;
+    left:-6px; top:4px;
+    width:11px; height:11px;
+    border-radius:50%;
+    background:var(--ink);
+    border:2px solid var(--brass);
+  }
+  .tl-head{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:baseline;
+    gap:10px 16px;
+  }
+  .tl-role{
+    font-family:var(--display);
+    font-size:19px;
+    font-weight:600;
+  }
+  .tl-dates{
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--teal);
+    background:var(--teal-soft);
+    padding:3px 10px;
+    border-radius:999px;
+    letter-spacing:0.02em;
+  }
+  .tl-org{
+    font-size:14px;
+    color:var(--paper-faint);
+    margin-top:4px;
+  }
+  .tl-org b{ color:var(--paper-dim); font-weight:500; }
+  .tl-bullets{
+    margin:16px 0 0;
+    padding:0;
+    list-style:none;
+    display:grid;
+    gap:9px;
+    max-width:640px;
+  }
+  .tl-bullets li{
+    position:relative;
+    padding-left:18px;
+    color:var(--paper-dim);
+    font-size:14.5px;
+  }
+  .tl-bullets li::before{
+    content:"";
+    position:absolute;
+    left:0; top:8px;
+    width:6px; height:1px;
+    background:var(--brass);
+  }
+
+  /* ---------- ACHIEVEMENTS ---------- */
+  .ach-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+  }
+  .ach-card{
+    background:var(--ink);
+    padding:28px 26px;
+  }
+  .ach-card .k{
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--brass);
+    letter-spacing:0.06em;
+  }
+  .ach-card p{
+    margin:10px 0 0;
+    font-size:15px;
+    color:var(--paper-dim);
+    line-height:1.55;
+  }
+
+  /* ---------- GLOBAL REACH ---------- */
+  .strip{
+    display:flex;
+    gap:16px;
+    overflow-x:auto;
+    padding-bottom:8px;
+    scrollbar-width:none;
+  }
+  .strip::-webkit-scrollbar{ display:none; }
+  .passcard{
+    flex:0 0 auto;
+    width:198px;
+    border:1px solid var(--line-strong);
+    border-radius:14px;
+    padding:20px 18px;
+    background:linear-gradient(160deg, var(--surface), var(--surface-2));
+    position:relative;
+  }
+  .passcard::after{
+    content:"✦";
+    position:absolute;
+    top:16px; right:16px;
+    color:var(--brass);
+    font-size:12px;
+    opacity:.7;
+  }
+  .passcard .country{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--paper-faint);
+  }
+  .passcard .city{
+    font-family:var(--display);
+    font-weight:600;
+    font-size:18px;
+    margin-top:6px;
+  }
+  .passcard .event{
+    font-size:13px;
+    color:var(--paper-dim);
+    margin-top:10px;
+    min-height:34px;
+  }
+  .passcard .year{
+    margin-top:14px;
+    font-family:var(--mono);
+    font-size:13px;
+    color:var(--brass);
+    border-top:1px dashed var(--line-strong);
+    padding-top:10px;
+  }
+
+  /* ---------- SKILLS ---------- */
+  .skills-grid{
+    display:grid;
+    grid-template-columns:1.1fr 1fr;
+    gap:48px;
+  }
+  .skill-block h3{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--paper-faint);
+    font-weight:500;
+    margin-bottom:16px;
+  }
+  .chips{
+    display:flex; flex-wrap:wrap; gap:9px;
+  }
+  .chip{
+    font-size:13px;
+    padding:8px 14px;
+    border:1px solid var(--line-strong);
+    border-radius:999px;
+    color:var(--paper-dim);
+  }
+  .chip.soft{
+    font-family:var(--mono);
+    font-size:12px;
+    border-color:var(--line);
+    color:var(--paper-faint);
+  }
+  .lang-list{ display:grid; gap:16px; margin-top:6px; }
+  .lang-row{ display:grid; grid-template-columns:110px 1fr 80px; align-items:center; gap:14px; }
+  .lang-name{ font-size:14px; }
+  .meter{ height:5px; background:var(--surface-2); border-radius:999px; overflow:hidden; }
+  .meter i{ display:block; height:100%; background:var(--brass); border-radius:999px; }
+  .lang-lvl{ font-family:var(--mono); font-size:11px; color:var(--paper-faint); text-align:right; letter-spacing:0.04em; }
+
+  /* ---------- EDUCATION ---------- */
+  .edu-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:20px;
+  }
+  .edu-card{
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px;
+    background:var(--surface);
+  }
+  .edu-card .tag{
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--teal);
+    background:var(--teal-soft);
+    display:inline-block;
+    padding:3px 10px;
+    border-radius:999px;
+    letter-spacing:0.04em;
+  }
+  .edu-card h4{
+    font-family:var(--display);
+    font-size:17px;
+    font-weight:600;
+    margin:14px 0 4px;
+  }
+  .edu-card .org{ font-size:13.5px; color:var(--paper-faint); }
+  .edu-card .note{ font-size:13px; color:var(--paper-dim); margin-top:10px; }
+
+  /* ---------- CONTACT ---------- */
+  .contact-section{
+    background:var(--surface);
+    border-top:1px solid var(--line);
+  }
+  .contact-grid{
+    display:grid;
+    grid-template-columns:1.2fr 1fr;
+    gap:40px;
+    align-items:start;
+  }
+  .contact-grid h2{ font-size:clamp(28px,4vw,42px); }
+  .contact-grid p.lede{ color:var(--paper-dim); margin-top:16px; max-width:44ch; }
+  .contact-list{ display:grid; gap:22px; }
+  .contact-row{ border-top:1px solid var(--line); padding-top:16px; }
+  .contact-row .k{
+    font-family:var(--mono);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--paper-faint);
+  }
+  .contact-row .v{ margin-top:6px; font-size:16px; }
+  .contact-row a.v:hover{ color:var(--brass); }
+
+  footer{
+    padding:26px 0 40px;
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:10px;
+    font-size:12.5px;
+    color:var(--paper-faint);
+    font-family:var(--mono);
+  }
+
+  @media (max-width:860px){
+    .hero-grid{ grid-template-columns:1fr; }
+    .stampfield{ height:300px; margin-top:20px; }
+    .ledger .wrap{ grid-template-columns:repeat(2,1fr); }
+    .ledger-item:nth-child(3){ border-left:none; }
+    .skills-grid{ grid-template-columns:1fr; }
+    .ach-grid{ grid-template-columns:1fr; }
+    .edu-grid{ grid-template-columns:1fr; }
+    .contact-grid{ grid-template-columns:1fr; }
+    nav.links{ display:none; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    .stamp{ animation:none; opacity:1; transform:rotate(var(--r,0deg)); }
+    .reveal{ opacity:1; transform:none; transition:none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="nav" id="siteNav">
+  <div class="nav-inner">
+    <div class="brand"><span class="mark">ZA</span> Ziad Arafat</div>
+    <nav class="links">
+      <a href="#experience">Experience</a>
+      <a href="#reach">Global Reach</a>
+      <a href="#skills">Skills</a>
+      <a href="#education">Education</a>
+    </nav>
+    <a class="nav-cta" href="#contact">Say hi 👋</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Riyadh, Saudi Arabia</div>
+      <h1>Ziad Arafat<br>Naduvakkattil.</h1>
+      <span class="role">Business Development · Procurement · Finance</span>
+      <p class="lede">Four years building the business development and procurement engine for a manufacturing and advertising group — spotting growth opportunities, negotiating supply chains, and keeping cross-functional teams pointed at the same goal.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="mailto:ziadarafat.nk@gmail.com">Email me</a>
+        <a class="btn btn-ghost" href="tel:+966502723895">Call +966 50 272 3895</a>
+      </div>
+    </div>
+    <div class="stampfield" aria-hidden="true">
+      <div class="stamp s1"><span class="city">GUANGZHOU</span><span class="yr">2025</span></div>
+      <div class="stamp s2"><span class="city">DÜSSELDORF</span><span class="yr">2024</span></div>
+      <div class="stamp s3"><span class="city">DUBAI</span><span class="yr">2024</span></div>
+      <div class="stamp s4"><span class="city">KUALA LUMPUR</span><span class="yr">2024</span></div>
+      <div class="stamp s5"><span class="city">SHANGHAI</span><span class="yr">2023</span></div>
+      <div class="stamp s6"><span class="city">GUANGZHOU</span><span class="yr">2024</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="ledger">
+  <div class="wrap">
+    <div class="ledger-item"><div class="num">4 yrs</div><div class="lbl">Experience</div></div>
+    <div class="ledger-item"><div class="num">$500K+</div><div class="lbl">Materials sourced</div></div>
+    <div class="ledger-item"><div class="num">SAR 1M</div><div class="lbl">High-ticket sales</div></div>
+    <div class="ledger-item"><div class="num">6</div><div class="lbl">Countries represented</div></div>
+  </div>
+</div>
+
+<section id="experience">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Work</div>
+      <h2>Where I've built the supply chain.</h2>
+      <p>From an internship on the design floor to running business development for the group — the long way round, on purpose.</p>
+    </div>
+
+    <div class="timeline">
+      <div class="tl-item reveal">
+        <div class="tl-head">
+          <div class="tl-role">Business Development Executive</div>
+          <div class="tl-dates">JUN 2023 — PRESENT</div>
+        </div>
+        <div class="tl-org"><b>ERTQA Company for Advertising</b> · Riyadh, Saudi Arabia</div>
+        <ul class="tl-bullets">
+          <li>Drive strategic business development — identifying growth opportunities, managing special projects with cross-functional teams, and building business plans aligned to organizational goals.</li>
+          <li>Lead procurement to establish cost-efficient supply chains, build long-term client relationships, and oversee financial performance to optimize profitability.</li>
+        </ul>
+      </div>
+
+      <div class="tl-item reveal">
+        <div class="tl-head">
+          <div class="tl-role">Procurement Specialist</div>
+          <div class="tl-dates">FEB 2023 — JUN 2023</div>
+        </div>
+        <div class="tl-org"><b>ERTQA Company for Advertising</b> · Riyadh, Saudi Arabia</div>
+        <ul class="tl-bullets">
+          <li>Analyzed purchasing data to optimize procurement processes and ensure cost-effective acquisition of goods and services.</li>
+          <li>Negotiated contracts and monitored supplier performance against contract terms alongside internal teams.</li>
+          <li>Used data analysis tools to enhance supply chain operations, contributing to cost benchmarks for procurement efficiency.</li>
+        </ul>
+      </div>
+
+      <div class="tl-item reveal">
+        <div class="tl-head">
+          <div class="tl-role">HR Recruitment Coordinator</div>
+          <div class="tl-dates">SEP 2022 — JAN 2023</div>
+        </div>
+        <div class="tl-org"><b>ERTQA Company for Advertising</b> · Riyadh, Saudi Arabia</div>
+        <ul class="tl-bullets">
+          <li>Sourced top-tier candidates through talent scouting, optimizing hiring and interview processes.</li>
+          <li>Developed tailored recruitment strategies aligned with organizational goals and expansion needs.</li>
+        </ul>
+      </div>
+
+      <div class="tl-item reveal">
+        <div class="tl-head">
+          <div class="tl-role">Project Coordinator</div>
+          <div class="tl-dates">SEP 2021 — AUG 2022</div>
+        </div>
+        <div class="tl-org"><b>MITS SkillPark</b> · Palakkad, India</div>
+        <ul class="tl-bullets">
+          <li>Planned, executed, and oversaw project delivery on time, within scope, and within budget.</li>
+          <li>Coordinated cross-functional teams across departments for effective collaboration through the project lifecycle.</li>
+        </ul>
+      </div>
+
+      <div class="tl-item reveal">
+        <div class="tl-head">
+          <div class="tl-role">Assistant Graphic Designer — Internship</div>
+          <div class="tl-dates">APR 2019</div>
+        </div>
+        <div class="tl-org"><b>ERTQA Creative Printing Solutions</b> · Riyadh, Saudi Arabia</div>
+        <ul class="tl-bullets">
+          <li>Worked with marketing and design teams to create visual materials and support lead designers in maintaining workflow efficiency.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0;">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Key Achievements</div>
+      <h2>Beyond the job description.</h2>
+    </div>
+    <div class="ach-grid reveal">
+      <div class="ach-card">
+        <div class="k">EXPANSION</div>
+        <p>Planned, designed, and facilitated the expansion to a larger production facility — creating the sub-brand ERTQA for Factory.</p>
+      </div>
+      <div class="ach-card">
+        <div class="k">SOURCING</div>
+        <p>Facilitated machinery and materials sourcing, negotiations, logistics, and financials for over $500K across 12–16 months.</p>
+      </div>
+      <div class="ach-card">
+        <div class="k">SALES</div>
+        <p>Handled high-ticket sales for VIP clients, luxury brands, government entities, and corporates — SAR 700K to SAR 1M in accumulated value.</p>
+      </div>
+      <div class="ach-card">
+        <div class="k">PRODUCT</div>
+        <p>Designed a custom web app with a developer for tailored factory management, and built a standalone sub-brand for 3D printing solutions.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="reach">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Global Reach</div>
+      <h2>Scouting the world for what's next.</h2>
+      <p>Representing the firm at exhibitions and trade events, scouting innovation, and building relationships with suppliers and clients abroad.</p>
+    </div>
+    <div class="strip reveal">
+      <div class="passcard">
+        <div class="country">China</div>
+        <div class="city">Guangzhou</div>
+        <div class="event">SouthPrint · SinoPack · SinoLabel</div>
+        <div class="year">2025</div>
+      </div>
+      <div class="passcard">
+        <div class="country">Germany</div>
+        <div class="city">Düsseldorf</div>
+        <div class="event">DRUPA</div>
+        <div class="year">2024</div>
+      </div>
+      <div class="passcard">
+        <div class="country">China</div>
+        <div class="city">Guangzhou</div>
+        <div class="event">Canton Fair</div>
+        <div class="year">2024</div>
+      </div>
+      <div class="passcard">
+        <div class="country">United Arab Emirates</div>
+        <div class="city">Dubai</div>
+        <div class="event">FESPA Middle East</div>
+        <div class="year">2024</div>
+      </div>
+      <div class="passcard">
+        <div class="country">Malaysia</div>
+        <div class="city">Kuala Lumpur</div>
+        <div class="event">Royal Selangor</div>
+        <div class="year">2024</div>
+      </div>
+      <div class="passcard">
+        <div class="country">China</div>
+        <div class="city">Shanghai</div>
+        <div class="event">SignChina</div>
+        <div class="year">2023</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Toolkit</div>
+      <h2>Skills, software, languages.</h2>
+    </div>
+    <div class="skills-grid reveal">
+      <div class="skill-block">
+        <h3>Professional</h3>
+        <div class="chips">
+          <span class="chip">Business Development</span>
+          <span class="chip">Strategic Planning</span>
+          <span class="chip">Procurement Management</span>
+          <span class="chip">Financial Performance Oversight</span>
+          <span class="chip">Negotiation</span>
+          <span class="chip">High Ticket Sales</span>
+          <span class="chip">Client Relationship Management</span>
+          <span class="chip">Project Planning &amp; Execution</span>
+          <span class="chip">Cross-Functional Coordination</span>
+          <span class="chip">Data Analysis</span>
+          <span class="chip">Analytical Thinking</span>
+          <span class="chip">Problem-Solving</span>
+        </div>
+
+        <h3 style="margin-top:32px;">Software</h3>
+        <div class="chips">
+          <span class="chip soft">MS Office</span>
+          <span class="chip soft">Advanced Excel</span>
+          <span class="chip soft">Adobe Photoshop</span>
+          <span class="chip soft">Adobe Illustrator</span>
+          <span class="chip soft">Premiere Pro</span>
+          <span class="chip soft">CorelDraw</span>
+          <span class="chip soft">Blender</span>
+          <span class="chip soft">Fusion 360</span>
+          <span class="chip soft">Meshmixer</span>
+          <span class="chip soft">AutoCAD</span>
+          <span class="chip soft">3D Slicers</span>
+          <span class="chip soft">CRM / ERP</span>
+          <span class="chip soft">Tally.ERP 9</span>
+        </div>
+      </div>
+
+      <div class="skill-block">
+        <h3>Languages</h3>
+        <div class="lang-list">
+          <div class="lang-row">
+            <div class="lang-name">English</div>
+            <div class="meter"><i style="width:100%"></i></div>
+            <div class="lang-lvl">FLUENT</div>
+          </div>
+          <div class="lang-row">
+            <div class="lang-name">Arabic</div>
+            <div class="meter"><i style="width:88%"></i></div>
+            <div class="lang-lvl">PROFICIENT</div>
+          </div>
+          <div class="lang-row">
+            <div class="lang-name">Hindi / Urdu</div>
+            <div class="meter"><i style="width:88%"></i></div>
+            <div class="lang-lvl">PROFICIENT</div>
+          </div>
+          <div class="lang-row">
+            <div class="lang-name">Malayalam</div>
+            <div class="meter"><i style="width:100%"></i></div>
+            <div class="lang-lvl">NATIVE</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="education">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Foundation</div>
+      <h2>Education &amp; certification.</h2>
+    </div>
+    <div class="edu-grid reveal">
+      <div class="edu-card">
+        <span class="tag">In progress</span>
+        <h4>ACCA Qualification</h4>
+        <div class="org">Association of Chartered Certified Accountants · 2022 – Present</div>
+        <div class="note">8 exams remaining to ACCA Affiliate status.</div>
+      </div>
+      <div class="edu-card">
+        <span class="tag">2022</span>
+        <h4>Google Project Management Professional</h4>
+        <div class="org">Coursera</div>
+        <div class="note">6-course professional certificate series, completed over 6 months at 10 hrs/week.</div>
+      </div>
+      <div class="edu-card">
+        <span class="tag">2022</span>
+        <h4>Bachelor of Commerce (B.Com.)</h4>
+        <div class="org">Bharathiyar University, Coimbatore</div>
+        <div class="note">Graduated with First Class grade.</div>
+      </div>
+      <div class="edu-card">
+        <span class="tag">2017 – 2019</span>
+        <h4>Higher Secondary (10th &amp; 12th)</h4>
+        <div class="org">International Indian School, Riyadh</div>
+        <div class="note">10th: 9.6 CGPA · 12th: 80%</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="contact-section" id="contact">
+  <div class="wrap contact-grid">
+    <div class="reveal">
+      <div class="eyebrow">Contact</div>
+      <h2>Let's build something efficient.</h2>
+      <p class="lede">Open to conversations about business development, procurement leadership, and supply chain roles across Riyadh and beyond.</p>
+    </div>
+    <div class="contact-list reveal">
+      <div class="contact-row">
+        <div class="k">Email</div>
+        <a class="v" href="mailto:ziadarafat.nk@gmail.com">ziadarafat.nk@gmail.com</a>
+      </div>
+      <div class="contact-row">
+        <div class="k">Phone</div>
+        <a class="v" href="tel:+966502723895">+966 50 272 3895</a>
+      </div>
+      <div class="contact-row">
+        <div class="k">Location</div>
+        <div class="v">Riyadh, Saudi Arabia</div>
+      </div>
+      <div class="contact-row">
+        <div class="k">Elsewhere</div>
+        <div class="v">LinkedIn — Ziad Arafat</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap">
+  <div>© 2026 Ziad Arafat Naduvakkattil</div>
+  <div>Business Development · Procurement · Finance</div>
+</footer>
+
+<script>
+  // nav solid on scroll
+  const nav = document.getElementById('siteNav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('solid', window.scrollY > 40);
+  });
+
+  // scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
