@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Liquid Glass · Certificate Viewer</title>
+  <!-- Font & Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* ----- reset & base ----- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #e0e5ec;
+      transition: background 0.3s ease, color 0.3s ease;
+      padding: 20px;
+    }
+
+    /* ----- dark / light themes (iOS style) ----- */
+    body.light {
+      background: #e5e9f0;
+      color: #1c1e24;
+    }
+
+    body.dark {
+      background: #0b0d12;
+      color: #f0f2f8;
+    }
+
+    /* main glass card */
+    .glass-container {
+      width: 100%;
+      max-width: 1200px;
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 56px;
+      padding: 30px 28px 28px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.3) inset;
+      transition: background 0.4s, box-shadow 0.4s;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      position: relative;
+    }
+
+    body.dark .glass-container {
+      background: rgba(20, 24, 32, 0.5);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+      border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    /* ----- header / toolbar ----- */
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px 12px;
+      margin-bottom: 28px;
+    }
+
+    .brand {
+      font-weight: 600;
+      font-size: 1.6rem;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 6px 18px 6px 14px;
+      border-radius: 40px;
+      backdrop-filter: blur(4px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.05);
+    }
+
+    body.dark .brand {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .brand i {
+      font-size: 1.8rem;
+      color: #007aff;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* iOS style buttons */
+    .ios-btn {
+      background: rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 10px 20px;
+      border-radius: 40px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: #1c1e24;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: pointer;
+    }
+
+    body.dark .ios-btn {
+      background: rgba(50, 56, 70, 0.5);
+      border-color: rgba(255, 255, 255, 0.08);
+      color: #f0f2f8;
+    }
+
+    .ios-btn:active {
+      transform: scale(0.94);
+    }
+
+    .ios-btn i {
+      font-size: 1.1rem;
+    }
+
+    /* theme toggle */
+    .theme-toggle {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 40px;
+      padding: 6px 8px;
+      display: flex;
+      gap: 6px;
+      backdrop-filter: blur(8px);
+    }
+
+    .theme-toggle .ios-btn {
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      padding: 6px 14px;
+      border-radius: 30px;
+      backdrop-filter: none;
+    }
+
+    .theme-toggle .ios-btn.active {
+      background: rgba(255, 255, 255, 0.5);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    body.dark .theme-toggle .ios-btn.active {
+      background: rgba(60, 70, 90, 0.6);
+    }
+
+    /* ----- certificate grid (cards) ----- */
+    .cert-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 24px;
+      margin-top: 8px;
+      margin-bottom: 8px;
+    }
+
+    /* card – liquid glass + bouncy, with preview */
+    .cert-card {
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 36px;
+      padding: 14px 12px 18px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 10px 20px -8px rgba(0,0,0,0.1);
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transform: scale(1);
+      will-change: transform;
+    }
+
+    body.dark .cert-card {
+      background: rgba(30, 36, 50, 0.4);
+      border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .cert-card:hover {
+      transform: scale(1.02) translateY(-6px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .cert-card:active {
+      transform: scale(0.96);
+    }
+
+    /* PDF preview inside card */
+    .pdf-preview-mini {
+      width: 100%;
+      aspect-ratio: 1 / 1.3;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 28px;
+      margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(2px);
+      transition: 0.2s;
+      padding: 8px;
+      position: relative;
+    }
+
+    body.dark .pdf-preview-mini {
+      background: rgba(0, 0, 0, 0.2);
+      border-color: rgba(255,255,255,0.05);
+    }
+
+    .pdf-preview-mini iframe,
+    .pdf-preview-mini object {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 20px;
+      background: white;
+      pointer-events: none; /* prevent scroll inside card */
+    }
+
+    .pdf-preview-mini .fallback-icon {
+      font-size: 3rem;
+      color: #ff3b30;
+      opacity: 0.7;
+    }
+
+    .pdf-preview-mini .fallback-text {
+      font-size: 0.7rem;
+      opacity: 0.5;
+      margin-top: 4px;
+    }
+
+    .cert-card .cert-name {
+      font-weight: 600;
+      font-size: 1rem;
+      word-break: break-word;
+      margin-top: 4px;
+    }
+
+    .cert-card .cert-meta {
+      font-size: 0.7rem;
+      opacity: 0.5;
+      margin-top: 2px;
+    }
+
+    /* ----- detail overlay - full PDF viewer (enlarged) ----- */
+    .detail-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 30px;
+    }
+
+    .detail-overlay.open {
+      display: flex;
+    }
+
+    .detail-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border-radius: 48px;
+      max-width: 900px;
+      width: 100%;
+      max-height: 95vh;
+      padding: 24px 24px 20px;
+      border: 1px solid rgba(255,255,255,0.15);
+      box-shadow: 0 50px 100px rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
+    }
+
+    body.dark .detail-card {
+      background: rgba(16, 20, 30, 0.6);
+      border-color: rgba(255,255,255,0.05);
+    }
+
+    .detail-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding: 0 6px;
+    }
+
+    .detail-header h2 {
+      font-weight: 600;
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: white;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .detail-header h2 i {
+      color: #ff3b30;
+    }
+
+    .detail-header .close-btn {
+      background: rgba(255,255,255,0.15);
+      border: none;
+      backdrop-filter: blur(8px);
+      color: white;
+      width: 44px;
+      height: 44px;
+      border-radius: 40px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .detail-header .close-btn:hover {
+      background: rgba(255,255,255,0.25);
+      transform: scale(1.05);
+    }
+
+    .detail-header .close-btn:active {
+      transform: scale(0.92);
+    }
+
+    /* PDF viewer - full size */
+    .pdf-viewer-wrapper {
+      flex: 1;
+      min-height: 500px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 32px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.06);
+      position: relative;
+    }
+
+    .pdf-viewer-wrapper iframe,
+    .pdf-viewer-wrapper object {
+      width: 100%;
+      height: 100%;
+      min-height: 500px;
+      border: none;
+      background: white;
+      border-radius: 32px;
+    }
+
+    .detail-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+      padding: 0 4px;
+      flex-wrap: wrap;
+    }
+
+    .detail-actions .ios-btn {
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.08);
+      color: white;
+      backdrop-filter: blur(8px);
+    }
+
+    .detail-actions .ios-btn:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .detail-actions .ios-btn.danger {
+      color: #ff453a;
+    }
+
+    .detail-actions .ios-btn.danger:hover {
+      background: rgba(255, 69, 58, 0.15);
+    }
+
+    /* empty state */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      opacity: 0.4;
+      font-weight: 400;
+      grid-column: 1 / -1;
+    }
+
+    .empty-state i {
+      font-size: 3rem;
+      opacity: 0.3;
+      margin-bottom: 12px;
+    }
+
+    /* loading */
+    .loading-state {
+      text-align: center;
+      padding: 60px 20px;
+      opacity: 0.6;
+      grid-column: 1 / -1;
+    }
+
+    .loading-state i {
+      font-size: 2.4rem;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* responsive */
+    @media (max-width: 600px) {
+      .glass-container { padding: 20px 14px 18px; }
+      .brand { font-size: 1.2rem; }
+      .cert-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+      .pdf-viewer-wrapper { min-height: 300px; }
+      .pdf-viewer-wrapper iframe,
+      .pdf-viewer-wrapper object { min-height: 300px; }
+      .detail-card { padding: 16px; }
+    }
+
+    @media (max-width: 420px) {
+      .cert-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body class="light">
+<div class="glass-container" id="app">
+
+  <!-- toolbar -->
+  <div class="toolbar">
+    <div class="brand">
+      <i class="fas fa-award"></i> Cert<span style="font-weight:300;">·</span>Liquid
+    </div>
+    <div class="actions">
+      <div class="theme-toggle">
+        <button class="ios-btn active" data-theme="light" id="themeLight"><i class="fas fa-sun"></i></button>
+        <button class="ios-btn" data-theme="dark" id="themeDark"><i class="fas fa-moon"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- grid -->
+  <div id="certGrid" class="cert-grid">
+    <div class="loading-state"><i class="fas fa-spinner"></i><p style="margin-top:12px;">Loading certificates...</p></div>
+  </div>
+
+  <!-- detail overlay - full PDF viewer -->
+  <div class="detail-overlay" id="detailOverlay">
+    <div class="detail-card">
+      <div class="detail-header">
+        <h2 id="detailTitle"><i class="fas fa-file-pdf"></i> <span id="detailName">Certificate</span></h2>
+        <button class="close-btn" id="detailCloseBtn"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="pdf-viewer-wrapper" id="detailPreviewContainer">
+        <!-- iframe or object -->
+      </div>
+      <div class="detail-actions">
+        <button class="ios-btn" id="detailDownloadBtn"><i class="fas fa-download"></i> Download</button>
+        <button class="ios-btn danger" id="detailDeleteBtn"><i class="fas fa-trash-alt"></i> Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    // ----- configuration -----
+    // Change this to your folder path (relative or absolute)
+    // The folder should contain PDF files. The script will list them.
+    // For security, this only works with a server-side directory listing or a pre-generated manifest.
+    // For demonstration, we use a hardcoded list of PDFs.
+    // In production, you would replace this with an API endpoint that returns a list of PDFs.
+    const PDF_FOLDER = './certificates/';  // <-- change to your folder path
+    
+    // For demo purposes, we simulate a folder listing.
+    // To use a real folder, you need a server-side script (PHP, Node, etc.) that returns a JSON list.
+    // This demo uses a predefined list of PDFs.
+    const DEMO_PDFS = [
+      'SwiftUI_Masterclass.pdf',
+      'Cloud_Architecture.pdf',
+      'Machine_Learning_Fundamentals.pdf',
+      'iOS_Development_Guide.pdf'
+    ];
+
+    // ----- state -----
+    let certificates = [];            // { id, name, path, date }
+    let selectedId = null;
+
+    // DOM refs
+    const grid = document.getElementById('certGrid');
+    const detailOverlay = document.getElementById('detailOverlay');
+    const detailTitle = document.getElementById('detailTitle');
+    const detailName = document.getElementById('detailName');
+    const detailPreviewContainer = document.getElementById('detailPreviewContainer');
+    const detailCloseBtn = document.getElementById('detailCloseBtn');
+    const detailDownloadBtn = document.getElementById('detailDownloadBtn');
+    const detailDeleteBtn = document.getElementById('detailDeleteBtn');
+    const themeLight = document.getElementById('themeLight');
+    const themeDark = document.getElementById('themeDark');
+
+    // ----- helpers -----
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function getFileName(path) {
+      return path.split('/').pop().replace('.pdf', '').replace(/_/g, ' ');
+    }
+
+    function render() {
+      if (!grid) return;
+      if (certificates.length === 0) {
+        grid.innerHTML = `<div class="empty-state"><i class="fas fa-certificate"></i><p>No certificates found in folder</p><p style="font-size:0.8rem; opacity:0.5; margin-top:8px;">Place PDFs in ./certificates/</p></div>`;
+        return;
+      }
+      let html = '';
+      certificates.forEach(cert => {
+        const previewHtml = cert.path ? `
+          <object data="${cert.path}" type="application/pdf" style="width:100%; height:100%; border:none; border-radius:20px; pointer-events:none;">
+            <div class="fallback-icon"><i class="fas fa-file-pdf"></i><div class="fallback-text">PDF</div></div>
+          </object>
+        ` : `<div class="fallback-icon"><i class="fas fa-file-pdf"></i><div class="fallback-text">preview</div></div>`;
+
+        html += `
+          <div class="cert-card" data-id="${cert.id}">
+            <div class="pdf-preview-mini">
+              ${previewHtml}
+            </div>
+            <div class="cert-name">${escapeHtml(cert.name)}</div>
+            <div class="cert-meta">${cert.date || '—'}</div>
+          </div>
+        `;
+      });
+      grid.innerHTML = html;
+      // attach click listeners
+      document.querySelectorAll('.cert-card').forEach(el => {
+        el.addEventListener('click', (e) => {
+          const id = Number(el.dataset.id);
+          openDetail(id);
+        });
+      });
+    }
+
+    function openDetail(id) {
+      const cert = certificates.find(c => c.id === id);
+      if (!cert) return;
+      selectedId = id;
+      detailName.textContent = cert.name;
+      detailTitle.innerHTML = `<i class="fas fa-file-pdf" style="color:#ff3b30;"></i> ${escapeHtml(cert.name)}`;
+      // preview - full size PDF viewer
+      detailPreviewContainer.innerHTML = cert.path ? `
+        <object data="${cert.path}#toolbar=0&navpanes=0" type="application/pdf" style="width:100%; height:100%; border:none; border-radius:32px;">
+          <p style="padding:40px; text-align:center; color:white;">PDF preview not available</p>
+        </object>
+      ` : `<p style="padding:40px; text-align:center; color:white;">No PDF available</p>`;
+      detailOverlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeDetail() {
+      detailOverlay.classList.remove('open');
+      document.body.style.overflow = '';
+      selectedId = null;
+    }
+
+    function deleteCertificate(id) {
+      // In a real implementation, you would call a server endpoint to delete the file.
+      // For demo, we just remove it from the list.
+      certificates = certificates.filter(c => c.id !== id);
+      render();
+      if (selectedId === id) closeDetail();
+      // Show a message
+      alert('Certificate removed from view (demo)');
+    }
+
+    // ----- load PDFs from folder -----
+    function loadCertificatesFromFolder() {
+      // This is a demo: we simulate loading from a folder.
+      // In production, you would fetch a list from an API endpoint.
+      // Example: fetch('/api/list-pdfs').then(res => res.json()).then(files => { ... });
+      
+      // Simulate async loading
+      setTimeout(() => {
+        // Use DEMO_PDFS as the list of files
+        const files = DEMO_PDFS;
+        if (files.length === 0) {
+          render();
+          return;
+        }
+        certificates = files.map((file, index) => {
+          const name = getFileName(file);
+          const date = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+          return {
+            id: Date.now() + index + Math.random() * 1000,
+            name: name,
+            path: PDF_FOLDER + file,
+            date: date
+          };
+        });
+        render();
+      }, 600); // simulate loading delay
+    }
+
+    // ----- detail actions -----
+    detailDownloadBtn.addEventListener('click', () => {
+      const cert = certificates.find(c => c.id === selectedId);
+      if (!cert) return;
+      // In a real implementation, you'd fetch the file or use the path.
+      // For demo, we open the PDF in a new tab.
+      window.open(cert.path, '_blank');
+    });
+
+    detailDeleteBtn.addEventListener('click', () => {
+      if (selectedId === null) return;
+      if (confirm('Delete this certificate from the folder?')) {
+        deleteCertificate(selectedId);
+      }
+    });
+
+    detailCloseBtn.addEventListener('click', closeDetail);
+    detailOverlay.addEventListener('click', (e) => {
+      if (e.target === detailOverlay) closeDetail();
+    });
+
+    // keyboard shortcut: Escape to close detail
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeDetail();
+    });
+
+    // ----- theme -----
+    function setTheme(theme) {
+      document.body.className = theme;
+      themeLight.classList.toggle('active', theme === 'light');
+      themeDark.classList.toggle('active', theme === 'dark');
+      localStorage.setItem('theme', theme);
+    }
+
+    themeLight.addEventListener('click', () => setTheme('light'));
+    themeDark.addEventListener('click', () => setTheme('dark'));
+
+    const storedTheme = localStorage.getItem('theme') || 'light';
+    setTheme(storedTheme);
+
+    // ----- init -----
+    loadCertificatesFromFolder();
+
+    // expose for debugging
+    window.__certs = certificates;
+  })();
+</script>
+</body>
+</html>
