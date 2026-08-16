@@ -1,0 +1,1962 @@
+<html lang="en" data-theme="dark"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Certificates · grouped display</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* ============================= TOKENS ============================= */
+    :root{
+      --bg-1:#eaf1fb;
+      --bg-2:#f4ecf9;
+      --bg-3:#e9f8f3;
+      --orb-a:#0a84ff;
+      --orb-b:#7c6cf6;
+      --orb-c:#34d8b8;
+
+      --glass-fill: rgba(255,255,255,0.55);
+      --glass-fill-strong: rgba(255,255,255,0.72);
+      --glass-border: rgba(255,255,255,0.75);
+      --glass-highlight: rgba(255,255,255,0.9);
+      --glass-shadow: rgba(31,41,55,0.14);
+
+      --text-1:#12151c;
+      --text-2:#4b5363;
+      --text-3:#828a99;
+
+      --accent:#0a84ff;
+      --accent-2:#7c6cf6;
+      --danger:#ff453a;
+      --success:#30d158;
+      --warn:#ff9f0a;
+
+      --radius-lg: 28px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+
+      --ease-spring: cubic-bezier(.34,1.56,.64,1);
+      --ease-smooth: cubic-bezier(.4,0,.2,1);
+    }
+
+    html[data-theme="dark"]{
+      --bg-1:#0a0c12;
+      --bg-2:#12101c;
+      --bg-3:#0c1614;
+      --orb-a:#0a84ff;
+      --orb-b:#8f7bff;
+      --orb-c:#22c8a4;
+
+      --glass-fill: rgba(32,34,44,0.48);
+      --glass-fill-strong: rgba(38,40,52,0.68);
+      --glass-border: rgba(255,255,255,0.10);
+      --glass-highlight: rgba(255,255,255,0.14);
+      --glass-shadow: rgba(0,0,0,0.45);
+
+      --text-1:#f2f3f7;
+      --text-2:#b4b9c6;
+      --text-3:#787f8f;
+    }
+
+    *{ box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      color:var(--text-1);
+      background: var(--bg-1);
+      overflow-x:hidden;
+      transition: background .6s var(--ease-smooth), color .6s var(--ease-smooth);
+      min-height:100%;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    .liquid-bg{
+      position:fixed; inset:0; z-index:-1; overflow:hidden;
+      background:
+        radial-gradient(120% 120% at 10% 0%, var(--bg-2), transparent 60%),
+        radial-gradient(120% 120% at 90% 100%, var(--bg-3), transparent 60%),
+        var(--bg-1);
+      transition: background 0.6s var(--ease-smooth);
+    }
+    .orb{
+      position:absolute; border-radius:50%;
+      filter: blur(60px);
+      opacity:.55;
+      will-change: transform;
+    }
+    html[data-theme="dark"] .orb{ opacity:.35; filter:blur(80px); }
+    .orb-1{ width:46vmax; height:46vmax; left:-15vmax; top:-18vmax; background: var(--orb-a); animation: float1 22s ease-in-out infinite; }
+    .orb-2{ width:38vmax; height:38vmax; right:-12vmax; top:10vmax; background: var(--orb-b); animation: float2 26s ease-in-out infinite; }
+    .orb-3{ width:42vmax; height:42vmax; left:20vmax; bottom:-22vmax; background: var(--orb-c); animation: float3 30s ease-in-out infinite; }
+
+    @keyframes float1{ 0%,100%{ transform: translate(0,0) scale(1);} 33%{ transform: translate(6vmax,8vmax) scale(1.12);} 66%{ transform: translate(-4vmax,4vmax) scale(0.94);} }
+    @keyframes float2{ 0%,100%{ transform: translate(0,0) scale(1);} 50%{ transform: translate(-8vmax,10vmax) scale(1.08);} }
+    @keyframes float3{ 0%,100%{ transform: translate(0,0) scale(1);} 40%{ transform: translate(5vmax,-6vmax) scale(1.1);} 75%{ transform: translate(-6vmax,-2vmax) scale(0.95);} }
+
+    @media (prefers-reduced-motion: reduce){
+      .orb{ animation: none !important; }
+      *{ animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+    }
+
+    .wrap{ max-width:1600px; margin:0 auto; padding: 28px 12px 140px; }
+
+    header.top{ display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom: 34px; padding-top: 10px; flex-wrap:wrap; }
+    .brand{ display:flex; align-items:center; gap:14px; }
+    .brand-mark{
+      width:44px; height:44px; border-radius:14px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      display:flex; align-items:center; justify-content:center;
+      color:#fff; font-size:19px; box-shadow: 0 8px 20px -6px rgba(10,132,255,.55);
+    }
+    .brand h1{ font-size:22px; margin:0; letter-spacing:-0.02em; font-weight:700; }
+    .brand p{ margin:1px 0 0; font-size:13px; color:var(--text-3); font-weight:500; }
+
+    .top-right{ display:flex; align-items:center; gap:12px; }
+
+    .theme-toggle{
+      position:relative; width:56px; height:32px; border-radius:100px;
+      background: var(--glass-fill); border:1px solid var(--glass-border);
+      backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
+      cursor:pointer; display:flex; align-items:center; padding:3px;
+      box-shadow: inset 0 1px 1px var(--glass-highlight), 0 4px 14px var(--glass-shadow);
+      transition: background .4s var(--ease-smooth);
+    }
+    .theme-toggle .knob{
+      width:26px; height:26px; border-radius:50%; background: linear-gradient(135deg,#fff,#dfe6f0);
+      display:flex; align-items:center; justify-content:center; font-size:12px;
+      transform: translateX(0); transition: transform .45s var(--ease-spring), background .4s;
+      box-shadow: 0 2px 6px rgba(0,0,0,.25); color:#333;
+    }
+    html[data-theme="dark"] .theme-toggle .knob{ transform: translateX(24px); background: linear-gradient(135deg,#2c2e3a,#1a1c26); color:#f3d67a; }
+
+    .draft-banner{
+      display:none; align-items:center; gap:12px;
+      background: rgba(255,159,10,.14); border:1px solid rgba(255,159,10,.35);
+      color: var(--warn); font-size:13px; font-weight:650;
+      padding:12px 16px; border-radius: var(--radius-sm);
+      margin-bottom:22px; backdrop-filter: blur(14px);
+    }
+    .draft-banner.show{ display:flex; }
+    .draft-banner span{ flex:1; }
+    .draft-banner button{
+      border:none; background: var(--warn); color:#1a1200; font-weight:700;
+      font-size:12.5px; padding:8px 14px; border-radius:100px; cursor:pointer;
+      transition: transform .3s var(--ease-spring);
+    }
+    .draft-banner button:hover{ transform: scale(1.05); }
+
+    .group-section {
+      margin-bottom: 32px;
+      animation: fadeUp 0.7s var(--ease-spring) both;
+    }
+    @keyframes fadeUp {
+      from { opacity:0; transform: translateY(20px); }
+      to { opacity:1; transform: translateY(0); }
+    }
+    .group-title {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 0 0 12px 6px;
+      color: var(--text-1);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .group-title .count {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-3);
+      background: var(--glass-fill);
+      padding: 2px 12px;
+      border-radius: 40px;
+      border: 1px solid var(--glass-border);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 18px;
+    }
+
+    .cert-card{
+      position:relative; border-radius: var(--radius-lg);
+      background: var(--glass-fill); border:1px solid var(--glass-border);
+      backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%);
+      box-shadow: inset 0 1px 1px var(--glass-highlight), 0 10px 30px -12px var(--glass-shadow);
+      overflow:hidden; cursor:pointer; transform: translateY(0) scale(1);
+      transition: transform .5s var(--ease-spring), box-shadow .4s var(--ease-smooth), background .4s;
+      animation: cardIn .55s var(--ease-spring) backwards;
+    }
+    .cert-card:hover{ transform: translateY(-6px) scale(1.015); box-shadow: inset 0 1px 1px var(--glass-highlight), 0 20px 40px -14px var(--glass-shadow); }
+    .cert-card:active{ transform: translateY(-2px) scale(.985); }
+
+    @keyframes cardIn{ from{ opacity:0; transform: translateY(18px) scale(.96);} to{ opacity:1; transform: translateY(0) scale(1);} }
+
+    .cert-thumb{ position:relative; height:170px; background: linear-gradient(160deg, rgba(10,132,255,.14), rgba(124,108,246,.10)); overflow:hidden; display:flex; align-items:center; justify-content:center; }
+    .cert-thumb iframe{ position:absolute; top:0; left:0; width:400%; height:400%; transform: scale(0.25); transform-origin: top left; border:none; pointer-events:none; background:#fff; }
+    .cert-thumb::after{ content:""; position:absolute; inset:0; background: linear-gradient(to top, rgba(0,0,0,.16), transparent 40%); pointer-events:none; }
+    .cert-thumb .open-hint{
+      position:absolute; bottom:10px; right:12px; font-size:11px; font-weight:600; color:#fff;
+      background: rgba(0,0,0,.35); padding:4px 10px; border-radius:20px; backdrop-filter: blur(6px);
+      display:flex; align-items:center; gap:5px; opacity:0; transform: translateY(4px); transition: all .3s var(--ease-smooth);
+    }
+    .cert-card:hover .open-hint{ opacity:1; transform: translateY(0); }
+
+    .cert-info{ padding:14px 14px 16px; }
+    .cert-name{
+      font-size:14.5px; font-weight:650; margin:0 0 4px; letter-spacing:-0.01em;
+      white-space: normal;
+      word-break: break-word;
+      line-height: 1.4;
+    }
+    .cert-date{
+      font-size:12px; color: var(--text-3); margin:0; font-weight:500;
+      display:flex; align-items:center; gap:6px;
+    }
+    .cert-date i{ font-size:11px; }
+    .cert-date .date-text{
+      border-bottom: 1px solid transparent;
+    }
+
+    .empty-state{ grid-column: 1/-1; text-align:center; padding: 90px 20px; color: var(--text-3); }
+    .empty-state i{ font-size:46px; margin-bottom:16px; display:block; color: var(--accent); opacity:.5; }
+    .empty-state h3{ color:var(--text-1); font-size:18px; margin:0 0 6px; }
+    .empty-state p{ margin:0; font-size:14px; }
+
+    .gear-btn{
+      position:fixed; right:26px; bottom:26px; z-index:40;
+      width:58px; height:58px; border-radius:50%;
+      background: var(--glass-fill-strong); border:1px solid var(--glass-border);
+      backdrop-filter: blur(22px) saturate(180%); -webkit-backdrop-filter: blur(22px) saturate(180%);
+      box-shadow: inset 0 1px 1px var(--glass-highlight), 0 12px 28px -8px var(--glass-shadow);
+      display:flex; align-items:center; justify-content:center; color: var(--text-1); font-size:21px;
+      cursor:pointer; transition: transform .4s var(--ease-spring), background .4s;
+    }
+    .gear-btn:hover{ transform: rotate(45deg) scale(1.08); }
+    .gear-btn:active{ transform: rotate(70deg) scale(.92); }
+    .gear-btn .dot{
+      position:absolute; top:6px; right:6px; width:11px; height:11px; border-radius:50%;
+      background: var(--warn); border:2px solid var(--glass-fill-strong); display:none;
+    }
+    .gear-btn.has-draft .dot{ display:block; }
+
+    .modal-overlay{
+      position:fixed; inset:0; z-index:100; background: rgba(10,12,18,.45);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      display:flex; align-items:center; justify-content:center; padding:20px;
+      opacity:0; pointer-events:none; transition: opacity .35s var(--ease-smooth);
+    }
+    .modal-overlay.show{ opacity:1; pointer-events:all; }
+
+    .modal-panel{
+      background: var(--glass-fill-strong); border:1px solid var(--glass-border);
+      backdrop-filter: blur(30px) saturate(180%); -webkit-backdrop-filter: blur(30px) saturate(180%);
+      border-radius: var(--radius-lg); box-shadow: inset 0 1px 1px var(--glass-highlight), 0 30px 60px -15px rgba(0,0,0,.4);
+      width:100%; max-width:480px; max-height:88vh; overflow:hidden; display:flex; flex-direction:column;
+      transform: scale(.85) translateY(30px); opacity:0;
+      transition: transform .5s var(--ease-spring), opacity .4s var(--ease-smooth);
+    }
+    .modal-overlay.show .modal-panel{ transform: scale(1) translateY(0); opacity:1; }
+
+    .modal-head{ display:flex; align-items:center; justify-content:space-between; padding:20px 22px 16px; border-bottom:1px solid var(--glass-border); }
+    .modal-head h2{ margin:0; font-size:18px; font-weight:700; letter-spacing:-0.01em; }
+    .modal-close{
+      width:32px; height:32px; border-radius:50%; background: rgba(120,128,144,.15); border:none; color: var(--text-2);
+      display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:14px;
+      transition: transform .3s var(--ease-spring), background .3s;
+    }
+    .modal-close:hover{ background: rgba(255,69,58,.18); color: var(--danger); transform: rotate(90deg); }
+
+    .modal-body{ padding:22px; overflow-y:auto; }
+
+    .field{ margin-bottom:16px; }
+    .field label{ display:block; font-size:12.5px; font-weight:650; color: var(--text-2); margin-bottom:7px; text-transform:uppercase; letter-spacing:.04em; }
+    .field input[type="text"], .field input[type="password"], .field input[type="url"], .field input[type="date"]{
+      width:100%; padding:13px 15px; font-size:15px; border-radius: var(--radius-sm);
+      border:1px solid var(--glass-border); background: rgba(127,127,127,.08); color: var(--text-1);
+      outline:none; transition: border-color .3s, box-shadow .3s, background .3s; font-family:inherit;
+    }
+    .field input:focus{ border-color: var(--accent); box-shadow: 0 0 0 4px rgba(10,132,255,.15); background: rgba(127,127,127,.04); }
+    .field .hint{ font-size:12px; color: var(--text-3); margin-top:6px; line-height:1.5; }
+    .field .hint i{ color: var(--accent); margin-right:3px; }
+
+    .info-box{
+      background: rgba(10,132,255,.08); border:1px solid rgba(10,132,255,.2); border-radius: var(--radius-sm);
+      padding:14px 16px; font-size:12.5px; color: var(--text-2); line-height:1.6; margin-bottom:18px;
+    }
+    .info-box b{ color: var(--text-1); }
+    .info-box ol{ margin:6px 0 0; padding-left:18px; }
+
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      padding:13px 18px; border-radius: var(--radius-sm); font-size:14.5px; font-weight:650; font-family:inherit;
+      border:none; cursor:pointer; transition: transform .35s var(--ease-spring), box-shadow .3s, opacity .3s, background .3s;
+      width:100%;
+    }
+    .btn:active{ transform: scale(.96); }
+    .btn-primary{ background: linear-gradient(135deg, var(--accent), var(--accent-2)); color:#fff; box-shadow: 0 10px 24px -8px rgba(10,132,255,.55); }
+    .btn-primary:hover{ box-shadow: 0 14px 30px -8px rgba(10,132,255,.7); }
+    .btn-primary:disabled{ opacity:.5; cursor:not-allowed; box-shadow:none; }
+    .btn-ghost{ background: rgba(127,127,127,.12); color: var(--text-1); }
+    .btn-danger-o{ background: rgba(255,69,58,.12); color: var(--danger); }
+    .btn-warn{ background: linear-gradient(135deg, #ff9f0a, #ff6a00); color:#fff; box-shadow: 0 10px 24px -8px rgba(255,159,10,.5); }
+
+    .error-msg{ color: var(--danger); font-size:13px; font-weight:600; margin:-6px 0 14px; display:flex; align-items:center; gap:6px; animation: shake .4s var(--ease-smooth); }
+    @keyframes shake{ 0%,100%{ transform: translateX(0);} 25%{ transform: translateX(-6px);} 75%{ transform: translateX(6px);} }
+    .success-msg{ color: var(--success); font-size:13px; font-weight:600; margin: 8px 0 0; display:flex; align-items:center; gap:6px; }
+
+    .admin-tabs{ display:flex; gap:8px; margin-bottom:18px; flex-wrap:wrap; }
+    .admin-tab{
+      flex:1; padding:10px; border-radius: var(--radius-sm); background: rgba(127,127,127,.1); color: var(--text-2);
+      text-align:center; font-size:13.5px; font-weight:650; cursor:pointer; border:1px solid transparent;
+      transition: all .3s var(--ease-smooth);
+    }
+    .admin-tab.active{ background: rgba(10,132,255,.14); color: var(--accent); border-color: rgba(10,132,255,.3); }
+
+    .admin-view{ display:none; }
+    .admin-view.active{ display:block; animation: fadeIn .35s var(--ease-smooth); }
+    @keyframes fadeIn{ from{ opacity:0; transform: translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+    .group-container {
+      margin-bottom: 20px;
+      border-radius: var(--radius-sm);
+      background: rgba(127,127,127,.05);
+      border: 1px solid var(--glass-border);
+      padding: 8px 8px 4px 8px;
+      transition: background 0.2s;
+    }
+    .group-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 10px 10px 10px;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-2);
+      cursor: grab;
+      user-select: none;
+      transition: background 0.2s;
+    }
+    .group-header:active { cursor: grabbing; }
+    .group-header .group-actions {
+      display: flex;
+      gap: 6px;
+    }
+    .group-header .group-actions button {
+      background: none;
+      border: none;
+      color: var(--text-3);
+      cursor: pointer;
+      font-size: 13px;
+      padding: 2px 6px;
+      border-radius: 6px;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .group-header .group-actions button:hover {
+      background: rgba(127,127,127,.15);
+      color: var(--text-1);
+      transform: scale(1.1);
+    }
+    .group-header .group-actions .del-group:hover {
+      color: var(--danger);
+      background: rgba(255,69,58,.12);
+    }
+    .group-items {
+      min-height: 40px;
+      padding: 4px 4px 8px 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .group-items .cert-list-item {
+      margin: 0;
+      border-radius: var(--radius-sm);
+      background: rgba(255,255,255,0.3);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--glass-border);
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: background 0.2s, transform 0.2s;
+      cursor: grab;
+    }
+    .group-items .cert-list-item:active { cursor: grabbing; }
+    .group-items .cert-list-item.dragging {
+      opacity: 0.4;
+      background: rgba(10,132,255,.1);
+    }
+    .group-items .cert-list-item .drag-handle {
+      color: var(--text-3);
+      font-size: 14px;
+      cursor: grab;
+      margin-right: 2px;
+      transition: color 0.2s;
+    }
+    .group-items .cert-list-item .drag-handle:hover { color: var(--text-1); }
+    .group-items .cert-list-item .meta { flex:1; min-width:0; }
+    .group-items .cert-list-item .meta .n { font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .group-items .cert-list-item .meta .d { font-size:11px; color: var(--text-3); display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+    .group-items .cert-list-item .acts { display:flex; gap:4px; flex-shrink:0; }
+
+    .add-group-area {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      margin-bottom: 8px;
+    }
+    .add-group-area input {
+      flex:1;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      border:1px solid var(--glass-border);
+      background: rgba(127,127,127,.08);
+      color: var(--text-1);
+      font-size:13px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .add-group-area input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(10,132,255,.15);
+    }
+    .add-group-area button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: var(--accent);
+      color: #fff;
+      font-weight:600;
+      cursor:pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .add-group-area button:hover { background: var(--accent-2); transform: scale(1.02); }
+
+    .empty-list { text-align:center; padding:30px 10px; color: var(--text-3); font-size:13.5px; }
+    .divider-label{ font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color: var(--text-3); margin: 22px 0 12px; }
+
+    .viewer-overlay{
+      position:fixed; inset:0; z-index:200; background: rgba(4,5,8,.75);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition: opacity .4s var(--ease-smooth);
+    }
+    .viewer-overlay.show{ opacity:1; pointer-events:all; }
+    .viewer-shell{
+      width:min(94vw, 1100px); height:92vh; background: var(--glass-fill-strong); border:1px solid var(--glass-border);
+      border-radius: var(--radius-lg); overflow:hidden; display:flex; flex-direction:column;
+      box-shadow: 0 40px 80px -20px rgba(0,0,0,.6); transform: scale(.9) translateY(40px); transition: transform .5s var(--ease-spring);
+    }
+    .viewer-overlay.show .viewer-shell{ transform: scale(1) translateY(0); }
+    .viewer-head{ display:flex; align-items:center; justify-content:space-between; padding:14px 18px; border-bottom:1px solid var(--glass-border); backdrop-filter: blur(20px); }
+    .viewer-head h3{ margin:0; font-size:15px; font-weight:650; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; padding-right:12px; }
+    .viewer-head .acts{ display:flex; gap:8px; flex-shrink:0; }
+    .viewer-body{ flex:1; background:#525659; position:relative; }
+    .viewer-body iframe{ width:100%; height:100%; border:none; }
+
+    .toast{
+      position:fixed; left:50%; bottom:30px; transform: translateX(-50%) translateY(20px);
+      background: var(--glass-fill-strong); border:1px solid var(--glass-border);
+      backdrop-filter: blur(20px) saturate(180%); padding:13px 20px; border-radius:100px;
+      font-size:13.5px; font-weight:600; box-shadow: 0 14px 30px -10px rgba(0,0,0,.35);
+      z-index:300; display:flex; align-items:center; gap:9px; opacity:0; pointer-events:none;
+      transition: all .4s var(--ease-spring); max-width:90vw;
+    }
+    .toast.show{ opacity:1; transform: translateX(-50%) translateY(0); }
+    .toast i{ color: var(--success); }
+    .toast.error i{ color: var(--danger); }
+
+    @media (max-width:1400px) {
+      .grid { grid-template-columns: repeat(6, 1fr); }
+    }
+    @media (max-width:1200px) {
+      .grid { grid-template-columns: repeat(5, 1fr); }
+    }
+    @media (max-width:1000px) {
+      .grid { grid-template-columns: repeat(4, 1fr); }
+    }
+    @media (max-width:750px) {
+      .grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width:550px) {
+      .grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width:400px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width:640px){
+      .wrap{ padding:20px 10px 130px; }
+      header.top{ margin-bottom:24px; }
+      .brand h1{ font-size:19px; }
+      .cert-thumb{ height:130px; }
+      .viewer-shell{ width:100vw; height:100vh; border-radius:0; }
+      .gear-btn{ right:18px; bottom:18px; width:52px; height:52px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="liquid-bg">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <div class="brand-mark"><i class="fa-solid fa-award"></i></div>
+      <div>
+        <h1>Certificates</h1>
+        <p id="countLabel">16 certificates</p>
+      </div>
+    </div>
+    <div class="top-right">
+      <div class="theme-toggle" id="themeToggle" role="button" aria-label="Toggle theme">
+        <div class="knob"><i class="fa-solid fa-moon" id="themeIcon"></i></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="draft-banner show" id="draftBanner">
+    <i class="fa-solid fa-triangle-exclamation"></i>
+    <span>You have unpublished changes — only visible in this browser until you download and redeploy the file.</span>
+    <button id="draftPublishBtn">Publish now</button>
+  </div>
+
+  <div id="publicContainer"><div class="group-section"><div class="group-title"><span>Bachelors Degree</span> <span class="count">1</span></div><div class="grid">
+          <div class="cert-card" style="animation-delay:0ms" data-id="c_msveyqd9_i8xjarr">
+            <div class="cert-thumb">
+              <iframe src="https://drive.google.com/file/d/18IPq2pZwFJ2HgyN1D-2ekDyDj9hiCypv/preview" loading="lazy"></iframe>
+              <span class="open-hint"><i class="fa-solid fa-expand"></i> View</span>
+            </div>
+            <div class="cert-info">
+              <p class="cert-name" title="Bachelors of Commerce (Accounting) Degree Certificate">Bachelors of Commerce (Accounting) Degree Certificate</p>
+              <p class="cert-date"><i class="fa-regular fa-calendar"></i><span class="date-text">Aug 2022</span></p>
+            </div>
+          </div>
+        </div></div><div class="group-section"><div class="group-title"><span>Google Project Management</span> <span class="count">7</span></div><div class="grid">
+          <div class="cert-card" style="animation-delay:0ms" data-id="c_msvffmh0_xn9zwzf">
+            <div class="cert-thumb">
+              <iframe src="https://drive.google.com/file/d/1GJZnIk9SLnv9LhxRhbv0aZKwDlcF6PRf/preview" loading="lazy"></iframe>
+              <span class="open-hint"><i class="fa-solid fa-expand"></i> View</span>
+            </div>
+            <div class="cert-info">
+              <p class="cert-name" title="Google Project Management Professional Certificate (6 Courses)">Google Project Management Professional Certificate (6 Courses)</p>
+              <p class="cert-date"><i class="fa-regular fa-calendar"></i><span class="date-text">Sep 2022</span></p>
+            </div>
+          </div>
+        
+          <div class="cert-card" style="animation-delay:45ms" data-id="c_msvfel2c_djl3ab8">
+            <div class="cert-thumb">
+              <iframe src="https://drive.google.com/file/d/18r_2Yd3YUUY7OQ5WkuCfdZMV4NfqfeOo/preview" loading="lazy"></iframe>
+              <span class="open-hint"><i class="fa-solid fa-expand"></i> View</span>
+            </div>
+            <div class="cert-info">
+              <p class="cert-name" title="Google Project Management Certificate - Badge">Google Project Management Certificate - Badge</p>
+              <p class="cert-date"><i class="fa-regular fa-calendar"></i><span class="date-text">Sep 2022</span></p>
+            </div>
+          </div>
+        
+          <div class="cert-card" style="animation-delay:90ms" data-id="c_msvf33k4_basyn49">
+            <div class="cert-thumb">
+              <iframe src="https://drive.google.com/file/d/15FPmb9Co8i37yJdt6hCk4yatTZQcHb2O/preview" loading="lazy"></iframe>
+              <span class="open-hint"><i class="fa-solid fa-expand"></i> View</span>
+            </div>
+            <div class="cert-info">
+              <p class="cert-name" title="Agile Project Management">Agile Project Management</p>
+              <p class="cert-date"><i class="fa-regular fa-calendar"></i><span class="date-text">Sep 2022</span></p>
+            </div>
+          </div>
+        
+          <div class="cert-card" style="animation-delay:135ms" data-id="c_msvf4klg_22vizts">
+            <div class="cert-thumb">
+              <iframe src="https://drive.google.com/file/d/10-ZYG5Ocbsrv97FC5_LxXnNOKVmJ9iXh/preview" loading="lazy"></iframe>
+              <span class="open-hint"><i class="fa-solid fa-expand"></i> View</span>
+            </div>
+            <div class="cert-info">
+              <p class="cert-name" title="Project Execution: Running the Project">Project Execution: Running the Project</p>
+              <p class="cert-date"><i class="fa-regular fa-calendar"></i><span class="date-text">Sep 2022</span></p>
+            </div>
+          </div>
+        
+          <div class="cert-card" style="animation-delay:180ms" data-id="c_msvf6fwk_pc85rg5">
+            <div class="cert-thumb">
+              <iframe src="https://drive.google.com/file/d/1et44CFGfRIa2VBC7RlCDzSwIV8AOcDlI/preview" loading="lazy"></iframe>
+              <span class="open-hint"><i class="fa-solid fa-expand"></i> View</span>
+            </div>
+            <div class="cert-info">
+              <p class="cert-name" title="Project Planning: Putting It All Together">Project Planning: Putting It All Together</p>
+              <p class="cert-date"><i class="fa-regular fa-calendar"></i><span class="date-text">Aug 2022</span></p>
+            </div>
+          </div>
+        
+          <div class="cert-card" style="animation-delay:225ms" data-id="c_msvf9898_dqwisd8">
+            <div class="cert-thumb">
+              <iframe src="https://drive.google.com/file/d/1zL1G1v7hDsqO8FRMe4z6yS4ymfhGXL4Z/preview" loading="lazy"></iframe>
+              <span class="open-hint"><i class="fa-solid fa-expand"></i> View</span>
+            </div>
+            <div class="cert-info">
+              <p class="cert-name" title="Project Initiation: Starting a Successful Project">Project Initiation: Starting a Successful Project</p>
+              <p class="cert-date"><i class="fa-regular fa-calendar"></i><span class="date-text">Aug 2022</span></p>
+            </div>
+          </div>
+        
+          <div class="cert-card" style="animation-delay:270ms" data-id="c_msvfcquk_u3jwxjb">
+            <div class="cert-thumb">
+              <iframe src="https://drive.google.com/file/d/1-RiLpA-_0txDID21tkJ5B4Tw8i1-xx_e/preview" loading="lazy"></iframe>
+              <span class="open-hint"><i class="fa-solid fa-expand"></i> View</span>
+            </div>
+            <div class="cert-info">
+              <p class="cert-name" title="Foundations Of Project Management">Foundations Of Project Management</p>
+              <p class="cert-date"><i class="fa-regular fa-calendar"></i><span class="date-text">Jul 2022</span></p>
+            </div>
+          </div>
+        </div></div><div class="group-section"><div class="group-title"><span>Lean Six Sigma</span> <span class="count">4</span></div><div class="grid">
+          <div class="cert-card" style="animation-delay:0ms" data-id="c_msvfqi64_p4k44np">
+            <div class="cert-thumb">
+              <iframe src="https://drive.google.com/file/d/1PX5dDGUj6qvk12tKhKHq5O8uQNj5jsHN/preview" loading="lazy"></iframe>
+              <span class="open-hint"><i class="fa-solid fa-expand"></i> View</span>
+            </div>
+            <div class="cert-info">
+              <p class="cert-name" title="Certified LSS Black Belt">Certified LSS Black Belt</p>
+              <p class="cert-date"><i class="fa-regular fa-calendar"></i><span class="date-text">Feb 2026</span></p>
+            </div>
+          </div>
+        
+          <div class="cert-card" style="animation-delay:45ms" data-id="c_msvfq1h0_ji018fz">
+            <div class="cert-thumb">
+              <iframe src="https://drive.google.com/file/d/1_KLYi3Mhuag9v8RjqwxTf_J1x83PvDlA/preview" loading="lazy"></iframe>
+              <span class="open-hint"><i class="fa-solid fa-expand"></i> View</span>
+            </div>
+            <div class="cert-info">
+              <p class="cert-name" title="Certified LSS Green Belt">Certified LSS Green Belt</p>
+              <p class="cert-date"><i class="fa-regular fa-calendar"></i><span class="date-text">Feb 2026</span></p>
+            </div>
+          </div>
+        
+          <div class="cert-card" style="animation-delay:90ms" data-id="c_msvfo0t0_bjcn2qe">
+            <div class="cert-thumb">
+              <iframe src="https://drive.google.com/file/d/129BtZfVtGBstwG8AYZaucUHV5OYLsg1r/preview" loading="lazy"></iframe>
+              <span class="open-hint"><i class="fa-solid fa-expand"></i> View</span>
+            </div>
+            <div class="cert-info">
+              <p class="cert-name" title="CPD Certified LSS Black Belt">CPD Certified LSS Black Belt</p>
+              <p class="cert-date"><i class="fa-regular fa-calendar"></i><span class="date-text">Feb 2026</span></p>
+            </div>
+          </div>
+        
+          <div class="cert-card" style="animation-delay:135ms" data-id="c_msvfmifw_gjo500q">
+            <div class="cert-thumb">
+              <iframe src="https://drive.google.com/file/d/1sfO5Nh541yICzQZqnet1H56Wv_O44iG_/preview" loading="lazy"></iframe>
+              <span class="open-hint"><i class="fa-solid fa-expand"></i> View</span>
+            </div>
+            <div class="cert-info">
+              <p class="cert-name" title="CPD LSS Green Belt">CPD LSS Green Belt</p>
+              <p class="cert-date"><i class="fa-regular fa-calendar"></i><span class="date-text">Feb 2026</span></p>
+            </div>
+          </div>
+        </div></div><div class="group-section"><div class="group-title"><span>Other</span> <span class="count">4</span></div><div class="grid">
+          <div class="cert-card" style="animation-delay:0ms" data-id="c_msvfultg_nvao4hf">
+            <div class="cert-thumb">
+              <iframe src="https://drive.google.com/file/d/1KQOzRauYjiJzmZHFutGLCzY06gAU3-rq/preview" loading="lazy"></iframe>
+              <span class="open-hint"><i class="fa-solid fa-expand"></i> View</span>
+            </div>
+            <div class="cert-info">
+              <p class="cert-name" title="HR Recruiter Certificate Naukrigulf">HR Recruiter Certificate Naukrigulf</p>
+              <p class="cert-date"><i class="fa-regular fa-calendar"></i><span class="date-text">Nov 2024</span></p>
+            </div>
+          </div>
+        
+          <div class="cert-card" style="animation-delay:45ms" data-id="c_msvfvqo4_nmf370s">
+            <div class="cert-thumb">
+              <iframe src="https://drive.google.com/file/d/1cjqJ6-rn6LGirHA7WzDsB3W8-yR5Yf_g/preview" loading="lazy"></iframe>
+              <span class="open-hint"><i class="fa-solid fa-expand"></i> View</span>
+            </div>
+            <div class="cert-info">
+              <p class="cert-name" title="NSDC Certificate Accounts Executive">NSDC Certificate Accounts Executive</p>
+              <p class="cert-date"><i class="fa-regular fa-calendar"></i><span class="date-text">Sep 2022</span></p>
+            </div>
+          </div>
+        
+          <div class="cert-card" style="animation-delay:90ms" data-id="c_msvfzdrg_vrkenrm">
+            <div class="cert-thumb">
+              <iframe src="https://drive.google.com/file/d/10LVxDzCTgu5cVUEcrQhIABXTApCAZNDx/preview" loading="lazy"></iframe>
+              <span class="open-hint"><i class="fa-solid fa-expand"></i> View</span>
+            </div>
+            <div class="cert-info">
+              <p class="cert-name" title="Accounts Executive - NSDC Course Completion Certificate">Accounts Executive - NSDC Course Completion Certificate</p>
+              <p class="cert-date"><i class="fa-regular fa-calendar"></i><span class="date-text">Aug 2022</span></p>
+            </div>
+          </div>
+        
+          <div class="cert-card" style="animation-delay:135ms" data-id="c_msvfxdic_z01wmzu">
+            <div class="cert-thumb">
+              <iframe src="https://drive.google.com/file/d/1PBHo3apj0ywdfc2EiuRdwAD8Edukp_vy/preview" loading="lazy"></iframe>
+              <span class="open-hint"><i class="fa-solid fa-expand"></i> View</span>
+            </div>
+            <div class="cert-info">
+              <p class="cert-name" title="RMIT Sustainable Business Green HR Certificate">RMIT Sustainable Business Green HR Certificate</p>
+              <p class="cert-date"><i class="fa-regular fa-calendar"></i><span class="date-text">Jun 2022</span></p>
+            </div>
+          </div>
+        </div></div></div>
+</div>
+
+<div class="gear-btn has-draft" id="gearBtn" aria-label="Admin settings">
+  <i class="fa-solid fa-gear"></i>
+  <div class="dot"></div>
+</div>
+
+<!-- ADMIN MODAL -->
+<div class="modal-overlay" id="adminOverlay">
+  <div class="modal-panel">
+    <div class="modal-head">
+      <h2 id="adminTitle">Admin Panel</h2>
+      <button class="modal-close" id="adminClose"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+
+      <div id="loginView" style="display: none;">
+        <div class="field">
+          <label>Password</label>
+          <input type="password" id="pwInput" placeholder="Enter admin password" autocomplete="current-password">
+        </div>
+        <div class="error-msg" id="pwError" style="display:none;"><i class="fa-solid fa-triangle-exclamation"></i> Incorrect password</div>
+        <button class="btn btn-primary" id="pwSubmit"><i class="fa-solid fa-unlock"></i> Unlock</button>
+      </div>
+
+      <div id="panelView" style="display: block;">
+        <div class="admin-tabs">
+          <div class="admin-tab" data-view="addView">Add</div>
+          <div class="admin-tab" data-view="manageView">Manage</div>
+          <div class="admin-tab active" data-view="publishView">Publish</div>
+          <div class="admin-tab" data-view="securityView">Security</div>
+        </div>
+
+        <div class="admin-view" id="addView">
+          <div class="info-box">
+            <b>Before you paste a link:</b> in Google Drive, right-click the PDF → <b>Share</b> → set general access to <b>"Anyone with the link"</b> → Viewer → Copy link.
+          </div>
+          <div class="field">
+            <label>Certificate Name</label>
+            <input type="text" id="certNameInput" placeholder="e.g. AWS Solutions Architect">
+          </div>
+          <div class="field">
+            <label>Google Drive Share Link</label>
+            <input type="url" id="certLinkInput" placeholder="https://drive.google.com/file/d/…/view?usp=sharing">
+            <div class="hint" id="linkHint"></div>
+          </div>
+          <div class="field">
+            <label>Group (optional)</label>
+            <input type="text" id="groupInput" placeholder="e.g. Cloud, Security, 2025">
+          </div>
+          <button class="btn btn-primary" id="addSubmit" disabled=""><i class="fa-solid fa-plus"></i> Add Certificate</button>
+          <div class="success-msg" id="addSuccess" style="display:none;"><i class="fa-solid fa-circle-check"></i> Added — remember to publish</div>
+        </div>
+
+        <div class="admin-view" id="manageView">
+          <div id="manageList"><div class="add-group-area">
+      <input type="text" id="newGroupName" placeholder="New group name">
+      <button id="createGroupBtn">Create</button>
+    </div><div class="group-container" data-group="Bachelors Degree">
+        <div class="group-header" draggable="true" data-group="Bachelors Degree">
+          <span><i class="fa-solid fa-grip-lines"></i> Bachelors Degree (1)</span>
+          <div class="group-actions">
+            <button class="rename-group" data-group="Bachelors Degree" title="Rename group"><i class="fa-solid fa-pen"></i></button>
+            <button class="del-group" data-group="Bachelors Degree" title="Delete group (certificates become Uncategorized)"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        </div>
+        <div class="group-items" data-group="Bachelors Degree">
+    
+          <div class="cert-list-item" data-id="c_msveyqd9_i8xjarr" draggable="true" data-group="Bachelors Degree">
+            <span class="drag-handle"><i class="fa-solid fa-grip-lines"></i></span>
+            <div class="meta">
+              <div class="n">Bachelors of Commerce (Accounting) Degree Certificate</div>
+              <div class="d">
+                <span class="date-display" data-id="c_msveyqd9_i8xjarr">Aug 2022</span>
+                <button class="icon-btn edit-date-btn" data-id="c_msveyqd9_i8xjarr" title="Edit date"><i class="fa-regular fa-calendar-pen"></i></button>
+              </div>
+            </div>
+            <div class="acts">
+              <button class="icon-btn edit" title="Edit name/link"><i class="fa-solid fa-pen"></i></button>
+              <button class="icon-btn del" title="Delete"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </div>
+        </div></div><div class="group-container" data-group="Google Project Management">
+        <div class="group-header" draggable="true" data-group="Google Project Management">
+          <span><i class="fa-solid fa-grip-lines"></i> Google Project Management (7)</span>
+          <div class="group-actions">
+            <button class="rename-group" data-group="Google Project Management" title="Rename group"><i class="fa-solid fa-pen"></i></button>
+            <button class="del-group" data-group="Google Project Management" title="Delete group (certificates become Uncategorized)"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        </div>
+        <div class="group-items" data-group="Google Project Management">
+    
+          <div class="cert-list-item" data-id="c_msvf33k4_basyn49" draggable="true" data-group="Google Project Management">
+            <span class="drag-handle"><i class="fa-solid fa-grip-lines"></i></span>
+            <div class="meta">
+              <div class="n">Agile Project Management</div>
+              <div class="d">
+                <span class="date-display" data-id="c_msvf33k4_basyn49">Sep 2022</span>
+                <button class="icon-btn edit-date-btn" data-id="c_msvf33k4_basyn49" title="Edit date"><i class="fa-regular fa-calendar-pen"></i></button>
+              </div>
+            </div>
+            <div class="acts">
+              <button class="icon-btn edit" title="Edit name/link"><i class="fa-solid fa-pen"></i></button>
+              <button class="icon-btn del" title="Delete"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </div>
+        
+          <div class="cert-list-item" data-id="c_msvf4klg_22vizts" draggable="true" data-group="Google Project Management">
+            <span class="drag-handle"><i class="fa-solid fa-grip-lines"></i></span>
+            <div class="meta">
+              <div class="n">Project Execution: Running the Project</div>
+              <div class="d">
+                <span class="date-display" data-id="c_msvf4klg_22vizts">Sep 2022</span>
+                <button class="icon-btn edit-date-btn" data-id="c_msvf4klg_22vizts" title="Edit date"><i class="fa-regular fa-calendar-pen"></i></button>
+              </div>
+            </div>
+            <div class="acts">
+              <button class="icon-btn edit" title="Edit name/link"><i class="fa-solid fa-pen"></i></button>
+              <button class="icon-btn del" title="Delete"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </div>
+        
+          <div class="cert-list-item" data-id="c_msvf6fwk_pc85rg5" draggable="true" data-group="Google Project Management">
+            <span class="drag-handle"><i class="fa-solid fa-grip-lines"></i></span>
+            <div class="meta">
+              <div class="n">Project Planning: Putting It All Together</div>
+              <div class="d">
+                <span class="date-display" data-id="c_msvf6fwk_pc85rg5">Aug 2022</span>
+                <button class="icon-btn edit-date-btn" data-id="c_msvf6fwk_pc85rg5" title="Edit date"><i class="fa-regular fa-calendar-pen"></i></button>
+              </div>
+            </div>
+            <div class="acts">
+              <button class="icon-btn edit" title="Edit name/link"><i class="fa-solid fa-pen"></i></button>
+              <button class="icon-btn del" title="Delete"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </div>
+        
+          <div class="cert-list-item" data-id="c_msvf9898_dqwisd8" draggable="true" data-group="Google Project Management">
+            <span class="drag-handle"><i class="fa-solid fa-grip-lines"></i></span>
+            <div class="meta">
+              <div class="n">Project Initiation: Starting a Successful Project</div>
+              <div class="d">
+                <span class="date-display" data-id="c_msvf9898_dqwisd8">Aug 2022</span>
+                <button class="icon-btn edit-date-btn" data-id="c_msvf9898_dqwisd8" title="Edit date"><i class="fa-regular fa-calendar-pen"></i></button>
+              </div>
+            </div>
+            <div class="acts">
+              <button class="icon-btn edit" title="Edit name/link"><i class="fa-solid fa-pen"></i></button>
+              <button class="icon-btn del" title="Delete"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </div>
+        
+          <div class="cert-list-item" data-id="c_msvfcquk_u3jwxjb" draggable="true" data-group="Google Project Management">
+            <span class="drag-handle"><i class="fa-solid fa-grip-lines"></i></span>
+            <div class="meta">
+              <div class="n">Foundations Of Project Management</div>
+              <div class="d">
+                <span class="date-display" data-id="c_msvfcquk_u3jwxjb">Jul 2022</span>
+                <button class="icon-btn edit-date-btn" data-id="c_msvfcquk_u3jwxjb" title="Edit date"><i class="fa-regular fa-calendar-pen"></i></button>
+              </div>
+            </div>
+            <div class="acts">
+              <button class="icon-btn edit" title="Edit name/link"><i class="fa-solid fa-pen"></i></button>
+              <button class="icon-btn del" title="Delete"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </div>
+        
+          <div class="cert-list-item" data-id="c_msvfel2c_djl3ab8" draggable="true" data-group="Google Project Management">
+            <span class="drag-handle"><i class="fa-solid fa-grip-lines"></i></span>
+            <div class="meta">
+              <div class="n">Google Project Management Certificate - Badge</div>
+              <div class="d">
+                <span class="date-display" data-id="c_msvfel2c_djl3ab8">Sep 2022</span>
+                <button class="icon-btn edit-date-btn" data-id="c_msvfel2c_djl3ab8" title="Edit date"><i class="fa-regular fa-calendar-pen"></i></button>
+              </div>
+            </div>
+            <div class="acts">
+              <button class="icon-btn edit" title="Edit name/link"><i class="fa-solid fa-pen"></i></button>
+              <button class="icon-btn del" title="Delete"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </div>
+        
+          <div class="cert-list-item" data-id="c_msvffmh0_xn9zwzf" draggable="true" data-group="Google Project Management">
+            <span class="drag-handle"><i class="fa-solid fa-grip-lines"></i></span>
+            <div class="meta">
+              <div class="n">Google Project Management Professional Certificate (6 Courses)</div>
+              <div class="d">
+                <span class="date-display" data-id="c_msvffmh0_xn9zwzf">Sep 2022</span>
+                <button class="icon-btn edit-date-btn" data-id="c_msvffmh0_xn9zwzf" title="Edit date"><i class="fa-regular fa-calendar-pen"></i></button>
+              </div>
+            </div>
+            <div class="acts">
+              <button class="icon-btn edit" title="Edit name/link"><i class="fa-solid fa-pen"></i></button>
+              <button class="icon-btn del" title="Delete"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </div>
+        </div></div><div class="group-container" data-group="Lean Six Sigma">
+        <div class="group-header" draggable="true" data-group="Lean Six Sigma">
+          <span><i class="fa-solid fa-grip-lines"></i> Lean Six Sigma (4)</span>
+          <div class="group-actions">
+            <button class="rename-group" data-group="Lean Six Sigma" title="Rename group"><i class="fa-solid fa-pen"></i></button>
+            <button class="del-group" data-group="Lean Six Sigma" title="Delete group (certificates become Uncategorized)"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        </div>
+        <div class="group-items" data-group="Lean Six Sigma">
+    
+          <div class="cert-list-item" data-id="c_msvfmifw_gjo500q" draggable="true" data-group="Lean Six Sigma">
+            <span class="drag-handle"><i class="fa-solid fa-grip-lines"></i></span>
+            <div class="meta">
+              <div class="n">CPD LSS Green Belt</div>
+              <div class="d">
+                <span class="date-display" data-id="c_msvfmifw_gjo500q">Feb 2026</span>
+                <button class="icon-btn edit-date-btn" data-id="c_msvfmifw_gjo500q" title="Edit date"><i class="fa-regular fa-calendar-pen"></i></button>
+              </div>
+            </div>
+            <div class="acts">
+              <button class="icon-btn edit" title="Edit name/link"><i class="fa-solid fa-pen"></i></button>
+              <button class="icon-btn del" title="Delete"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </div>
+        
+          <div class="cert-list-item" data-id="c_msvfo0t0_bjcn2qe" draggable="true" data-group="Lean Six Sigma">
+            <span class="drag-handle"><i class="fa-solid fa-grip-lines"></i></span>
+            <div class="meta">
+              <div class="n">CPD Certified LSS Black Belt</div>
+              <div class="d">
+                <span class="date-display" data-id="c_msvfo0t0_bjcn2qe">Feb 2026</span>
+                <button class="icon-btn edit-date-btn" data-id="c_msvfo0t0_bjcn2qe" title="Edit date"><i class="fa-regular fa-calendar-pen"></i></button>
+              </div>
+            </div>
+            <div class="acts">
+              <button class="icon-btn edit" title="Edit name/link"><i class="fa-solid fa-pen"></i></button>
+              <button class="icon-btn del" title="Delete"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </div>
+        
+          <div class="cert-list-item" data-id="c_msvfq1h0_ji018fz" draggable="true" data-group="Lean Six Sigma">
+            <span class="drag-handle"><i class="fa-solid fa-grip-lines"></i></span>
+            <div class="meta">
+              <div class="n">Certified LSS Green Belt</div>
+              <div class="d">
+                <span class="date-display" data-id="c_msvfq1h0_ji018fz">Feb 2026</span>
+                <button class="icon-btn edit-date-btn" data-id="c_msvfq1h0_ji018fz" title="Edit date"><i class="fa-regular fa-calendar-pen"></i></button>
+              </div>
+            </div>
+            <div class="acts">
+              <button class="icon-btn edit" title="Edit name/link"><i class="fa-solid fa-pen"></i></button>
+              <button class="icon-btn del" title="Delete"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </div>
+        
+          <div class="cert-list-item" data-id="c_msvfqi64_p4k44np" draggable="true" data-group="Lean Six Sigma">
+            <span class="drag-handle"><i class="fa-solid fa-grip-lines"></i></span>
+            <div class="meta">
+              <div class="n">Certified LSS Black Belt</div>
+              <div class="d">
+                <span class="date-display" data-id="c_msvfqi64_p4k44np">Feb 2026</span>
+                <button class="icon-btn edit-date-btn" data-id="c_msvfqi64_p4k44np" title="Edit date"><i class="fa-regular fa-calendar-pen"></i></button>
+              </div>
+            </div>
+            <div class="acts">
+              <button class="icon-btn edit" title="Edit name/link"><i class="fa-solid fa-pen"></i></button>
+              <button class="icon-btn del" title="Delete"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </div>
+        </div></div><div class="group-container" data-group="Other">
+        <div class="group-header" draggable="true" data-group="Other">
+          <span><i class="fa-solid fa-grip-lines"></i> Other (4)</span>
+          <div class="group-actions">
+            <button class="rename-group" data-group="Other" title="Rename group"><i class="fa-solid fa-pen"></i></button>
+            <button class="del-group" data-group="Other" title="Delete group (certificates become Uncategorized)"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        </div>
+        <div class="group-items" data-group="Other">
+    
+          <div class="cert-list-item" data-id="c_msvfultg_nvao4hf" draggable="true" data-group="Other">
+            <span class="drag-handle"><i class="fa-solid fa-grip-lines"></i></span>
+            <div class="meta">
+              <div class="n">HR Recruiter Certificate Naukrigulf</div>
+              <div class="d">
+                <span class="date-display" data-id="c_msvfultg_nvao4hf">Nov 2024</span>
+                <button class="icon-btn edit-date-btn" data-id="c_msvfultg_nvao4hf" title="Edit date"><i class="fa-regular fa-calendar-pen"></i></button>
+              </div>
+            </div>
+            <div class="acts">
+              <button class="icon-btn edit" title="Edit name/link"><i class="fa-solid fa-pen"></i></button>
+              <button class="icon-btn del" title="Delete"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </div>
+        
+          <div class="cert-list-item" data-id="c_msvfvqo4_nmf370s" draggable="true" data-group="Other">
+            <span class="drag-handle"><i class="fa-solid fa-grip-lines"></i></span>
+            <div class="meta">
+              <div class="n">NSDC Certificate Accounts Executive</div>
+              <div class="d">
+                <span class="date-display" data-id="c_msvfvqo4_nmf370s">Sep 2022</span>
+                <button class="icon-btn edit-date-btn" data-id="c_msvfvqo4_nmf370s" title="Edit date"><i class="fa-regular fa-calendar-pen"></i></button>
+              </div>
+            </div>
+            <div class="acts">
+              <button class="icon-btn edit" title="Edit name/link"><i class="fa-solid fa-pen"></i></button>
+              <button class="icon-btn del" title="Delete"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </div>
+        
+          <div class="cert-list-item" data-id="c_msvfxdic_z01wmzu" draggable="true" data-group="Other">
+            <span class="drag-handle"><i class="fa-solid fa-grip-lines"></i></span>
+            <div class="meta">
+              <div class="n">RMIT Sustainable Business Green HR Certificate</div>
+              <div class="d">
+                <span class="date-display" data-id="c_msvfxdic_z01wmzu">Jun 2022</span>
+                <button class="icon-btn edit-date-btn" data-id="c_msvfxdic_z01wmzu" title="Edit date"><i class="fa-regular fa-calendar-pen"></i></button>
+              </div>
+            </div>
+            <div class="acts">
+              <button class="icon-btn edit" title="Edit name/link"><i class="fa-solid fa-pen"></i></button>
+              <button class="icon-btn del" title="Delete"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </div>
+        
+          <div class="cert-list-item" data-id="c_msvfzdrg_vrkenrm" draggable="true" data-group="Other">
+            <span class="drag-handle"><i class="fa-solid fa-grip-lines"></i></span>
+            <div class="meta">
+              <div class="n">Accounts Executive - NSDC Course Completion Certificate</div>
+              <div class="d">
+                <span class="date-display" data-id="c_msvfzdrg_vrkenrm">Aug 2022</span>
+                <button class="icon-btn edit-date-btn" data-id="c_msvfzdrg_vrkenrm" title="Edit date"><i class="fa-regular fa-calendar-pen"></i></button>
+              </div>
+            </div>
+            <div class="acts">
+              <button class="icon-btn edit" title="Edit name/link"><i class="fa-solid fa-pen"></i></button>
+              <button class="icon-btn del" title="Delete"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </div>
+        </div></div></div>
+        </div>
+
+        <div class="admin-view active" id="publishView">
+          <div class="info-box">
+            Your changes live only in this browser until you publish. Publishing downloads an updated copy of this HTML file with the certificate list baked in — upload it to GitHub Pages (overwriting the old file) to make it live for everyone.
+            <ol>
+              <li>Click <b>Download Updated Site</b> below.</li>
+              <li>Upload the downloaded file to your GitHub repo, replacing the existing one.</li>
+              <li>Done — visitors now see the update, no sign-in required.</li>
+            </ol>
+          </div>
+          <button class="btn btn-warn" id="publishBtn"><i class="fa-solid fa-cloud-arrow-down"></i> Download Updated Site</button>
+          <button class="btn btn-ghost" id="copyDataBtn" style="margin-top:10px;"><i class="fa-solid fa-copy"></i> Copy Certificate Data (JSON)</button>
+          <div class="hint" style="margin-top:10px;">Use "Copy Certificate Data" instead if you're testing this file locally (opening it directly rather than through a live URL) — paste it manually into the <code>cert-data</code> script tag near the bottom of the file.</div>
+        </div>
+
+        <div class="admin-view" id="securityView">
+          <div class="field">
+            <label>New Password</label>
+            <input type="password" id="newPwInput" placeholder="Enter a new admin password">
+          </div>
+          <div class="field">
+            <label>Confirm New Password</label>
+            <input type="password" id="confirmPwInput" placeholder="Confirm new password">
+          </div>
+          <button class="btn btn-ghost" id="changePwBtn"><i class="fa-solid fa-key"></i> Update Password</button>
+          <div class="success-msg" id="pwChangeSuccess" style="display:none;"><i class="fa-solid fa-circle-check"></i> Password updated (remember to publish)</div>
+          <div class="hint">Note: the password only gates this browser's admin panel. Publishing bakes the new password hash into the file you redeploy — anyone using an older copy of the file still has the old password.</div>
+          <div class="divider-label">Danger Zone</div>
+          <button class="btn btn-danger-o" id="lockOutBtn"><i class="fa-solid fa-right-from-bracket"></i> Lock Admin Panel</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="modal-overlay" id="editOverlay">
+  <div class="modal-panel" style="max-width:420px;">
+    <div class="modal-head">
+      <h2>Edit Certificate</h2>
+      <button class="modal-close" id="editClose"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Certificate Name</label>
+        <input type="text" id="editNameInput" placeholder="Certificate name">
+      </div>
+      <div class="field">
+        <label>Google Drive Share Link</label>
+        <input type="url" id="editLinkInput" placeholder="https://drive.google.com/file/d/…/view?usp=sharing">
+      </div>
+      <div class="field">
+        <label>Group</label>
+        <input type="text" id="editGroupInput" placeholder="Group name">
+      </div>
+      <button class="btn btn-primary" id="editSave"><i class="fa-solid fa-check"></i> Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- PDF VIEWER -->
+<div class="viewer-overlay" id="viewerOverlay">
+  <div class="viewer-shell">
+    <div class="viewer-head">
+      <h3 id="viewerTitle">Certificate</h3>
+      <div class="acts">
+        <button class="icon-btn" id="viewerDownload" title="Download"><i class="fa-solid fa-download"></i></button>
+        <button class="icon-btn" id="viewerClose" title="Close"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    </div>
+    <div class="viewer-body">
+      <iframe id="viewerFrame" title="PDF preview" allow="autoplay"></iframe>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><i class="fa-solid fa-circle-check"></i><span id="toastText">Copied — paste into the cert-data script tag</span></div>
+
+<!-- PUBLISHED CERTIFICATE DATA -->
+<script id="cert-data" type="application/json">
+[
+  {
+    "id": "c_msveyqd9_i8xjarr",
+    "name": "Bachelors of Commerce (Accounting) Degree Certificate",
+    "driveId": "18IPq2pZwFJ2HgyN1D-2ekDyDj9hiCypv",
+    "group": "Bachelors Degree",
+    "uploadDate": "2022-08-24T00:00:00.000Z"
+  },
+  {
+    "id": "c_msvf33k4_basyn49",
+    "name": "Agile Project Management",
+    "driveId": "15FPmb9Co8i37yJdt6hCk4yatTZQcHb2O",
+    "group": "Google Project Management",
+    "uploadDate": "2022-09-06T00:00:00.000Z"
+  },
+  {
+    "id": "c_msvf4klg_22vizts",
+    "name": "Project Execution: Running the Project",
+    "driveId": "10-ZYG5Ocbsrv97FC5_LxXnNOKVmJ9iXh",
+    "group": "Google Project Management",
+    "uploadDate": "2022-09-03T00:00:00.000Z"
+  },
+  {
+    "id": "c_msvf6fwk_pc85rg5",
+    "name": "Project Planning: Putting It All Together",
+    "driveId": "1et44CFGfRIa2VBC7RlCDzSwIV8AOcDlI",
+    "group": "Google Project Management",
+    "uploadDate": "2022-08-10T00:00:00.000Z"
+  },
+  {
+    "id": "c_msvf9898_dqwisd8",
+    "name": "Project Initiation: Starting a Successful Project",
+    "driveId": "1zL1G1v7hDsqO8FRMe4z6yS4ymfhGXL4Z",
+    "group": "Google Project Management",
+    "uploadDate": "2022-08-04T00:00:00.000Z"
+  },
+  {
+    "id": "c_msvfcquk_u3jwxjb",
+    "name": "Foundations Of Project Management",
+    "driveId": "1-RiLpA-_0txDID21tkJ5B4Tw8i1-xx_e",
+    "group": "Google Project Management",
+    "uploadDate": "2022-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "c_msvfel2c_djl3ab8",
+    "name": "Google Project Management Certificate - Badge",
+    "driveId": "18r_2Yd3YUUY7OQ5WkuCfdZMV4NfqfeOo",
+    "group": "Google Project Management",
+    "uploadDate": "2022-09-07T00:00:00.000Z"
+  },
+  {
+    "id": "c_msvffmh0_xn9zwzf",
+    "name": "Google Project Management Professional Certificate (6 Courses)",
+    "driveId": "1GJZnIk9SLnv9LhxRhbv0aZKwDlcF6PRf",
+    "group": "Google Project Management",
+    "uploadDate": "2022-09-08T00:00:00.000Z"
+  },
+  {
+    "id": "c_msvfmifw_gjo500q",
+    "name": "CPD LSS Green Belt",
+    "driveId": "1sfO5Nh541yICzQZqnet1H56Wv_O44iG_",
+    "group": "Lean Six Sigma",
+    "uploadDate": "2026-02-07T00:00:00.000Z"
+  },
+  {
+    "id": "c_msvfo0t0_bjcn2qe",
+    "name": "CPD Certified LSS Black Belt",
+    "driveId": "129BtZfVtGBstwG8AYZaucUHV5OYLsg1r",
+    "group": "Lean Six Sigma",
+    "uploadDate": "2026-02-08T00:00:00.000Z"
+  },
+  {
+    "id": "c_msvfq1h0_ji018fz",
+    "name": "Certified LSS Green Belt",
+    "driveId": "1_KLYi3Mhuag9v8RjqwxTf_J1x83PvDlA",
+    "group": "Lean Six Sigma",
+    "uploadDate": "2026-02-09T00:00:00.000Z"
+  },
+  {
+    "id": "c_msvfqi64_p4k44np",
+    "name": "Certified LSS Black Belt",
+    "driveId": "1PX5dDGUj6qvk12tKhKHq5O8uQNj5jsHN",
+    "group": "Lean Six Sigma",
+    "uploadDate": "2026-02-10T00:00:00.000Z"
+  },
+  {
+    "id": "c_msvfultg_nvao4hf",
+    "name": "HR Recruiter Certificate Naukrigulf",
+    "driveId": "1KQOzRauYjiJzmZHFutGLCzY06gAU3-rq",
+    "group": "Other",
+    "uploadDate": "2024-11-09T00:00:00.000Z"
+  },
+  {
+    "id": "c_msvfvqo4_nmf370s",
+    "name": "NSDC Certificate Accounts Executive",
+    "driveId": "1cjqJ6-rn6LGirHA7WzDsB3W8-yR5Yf_g",
+    "group": "Other",
+    "uploadDate": "2022-09-03T00:00:00.000Z"
+  },
+  {
+    "id": "c_msvfxdic_z01wmzu",
+    "name": "RMIT Sustainable Business Green HR Certificate",
+    "driveId": "1PBHo3apj0ywdfc2EiuRdwAD8Edukp_vy",
+    "group": "Other",
+    "uploadDate": "2022-06-23T00:00:00.000Z"
+  },
+  {
+    "id": "c_msvfzdrg_vrkenrm",
+    "name": "Accounts Executive - NSDC Course Completion Certificate",
+    "driveId": "10LVxDzCTgu5cVUEcrQhIABXTApCAZNDx",
+    "group": "Other",
+    "uploadDate": "2022-08-25T00:00:00.000Z"
+  }
+]
+</script>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ============================= STORAGE KEYS ============================= */
+  const DRAFT_KEY = "lg_draft_certs_v2";
+  const PW_HASH_KEY = "lg_admin_pw_hash_v1";
+  const THEME_KEY = "lg_theme_v1";
+
+  const DEFAULT_PW_HASH = "fabf5b7fedb3e62a81c9298b19706249ee128011bf9d94867681020c16f8b741";
+
+  const $ = (sel, ctx) => (ctx||document).querySelector(sel);
+  const $$ = (sel, ctx) => Array.from((ctx||document).querySelectorAll(sel));
+
+  async function sha256Hex(str){
+    const enc = new TextEncoder().encode(str);
+    const buf = await crypto.subtle.digest("SHA-256", enc);
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");
+  }
+
+  function uid(){ return "c_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2,9); }
+
+  function fmtMonthYear(iso){
+    if(!iso) return "—";
+    const d = new Date(iso);
+    if(isNaN(d.getTime())) return "—";
+    return d.toLocaleDateString(undefined, { year:"numeric", month:"short" });
+  }
+
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[c]));
+  }
+
+  let toastTimer;
+  function showToast(msg, isError){
+    const t = $("#toast");
+    $("#toastText").textContent = msg;
+    t.classList.toggle("error", !!isError);
+    t.querySelector("i").className = isError ? "fa-solid fa-circle-exclamation" : "fa-solid fa-circle-check";
+    t.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=> t.classList.remove("show"), 3200);
+  }
+
+  function extractDriveId(input){
+    if(!input) return null;
+    input = input.trim();
+    let m = input.match(/\/file\/d\/([a-zA-Z0-9_-]{15,})/);
+    if(m) return m[1];
+    m = input.match(/[?&]id=([a-zA-Z0-9_-]{15,})/);
+    if(m) return m[1];
+    if(/^[a-zA-Z0-9_-]{15,}$/.test(input)) return input;
+    return null;
+  }
+  function drivePreviewUrl(id){ return "https://drive.google.com/file/d/" + id + "/preview"; }
+  function driveDownloadUrl(id){ return "https://drive.google.com/uc?export=download&id=" + id; }
+
+  /* ============================= THEME ============================= */
+  function applyTheme(theme){
+    document.documentElement.setAttribute("data-theme", theme);
+    $("#themeIcon").className = theme === "dark" ? "fa-solid fa-moon" : "fa-solid fa-sun";
+    localStorage.setItem(THEME_KEY, theme);
+  }
+  (function initTheme(){
+    const saved = localStorage.getItem(THEME_KEY);
+    const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    applyTheme(saved || (prefersDark ? "dark" : "light"));
+  })();
+  $("#themeToggle").addEventListener("click", ()=>{
+    const cur = document.documentElement.getAttribute("data-theme");
+    applyTheme(cur === "dark" ? "light" : "dark");
+  });
+
+  /* ============================= DATA LAYER ============================= */
+  let publishedCerts = [];
+  try{
+    publishedCerts = JSON.parse($("#cert-data").textContent.trim() || "[]");
+  }catch(e){ publishedCerts = []; }
+
+  let certs = JSON.parse(JSON.stringify(publishedCerts));
+  try{
+    const draftRaw = localStorage.getItem(DRAFT_KEY);
+    if(draftRaw) certs = JSON.parse(draftRaw);
+  }catch(e){ /* ignore */ }
+
+  function isDirty(){
+    return JSON.stringify(certs) !== JSON.stringify(publishedCerts);
+  }
+  function persistDraft(){
+    if(isDirty()){
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(certs));
+    }else{
+      localStorage.removeItem(DRAFT_KEY);
+    }
+    updateDraftUI();
+  }
+  function updateDraftUI(){
+    const dirty = isDirty();
+    $("#draftBanner").classList.toggle("show", dirty);
+    $("#gearBtn").classList.toggle("has-draft", dirty);
+  }
+
+  /* ============================= RENDER PUBLIC (grouped) ============================= */
+  function renderPublic(){
+    const container = $("#publicContainer");
+    const list = certs.slice().sort((a,b)=> new Date(b.uploadDate) - new Date(a.uploadDate));
+    const total = list.length;
+    $("#countLabel").textContent = total === 0 ? "No certificates yet" : total + " certificate" + (total===1?"":"s");
+
+    if(total === 0){
+      container.innerHTML = `
+        <div class="empty-state">
+          <i class="fa-solid fa-folder-open"></i>
+          <h3>No certificates yet</h3>
+          <p>Open the admin panel with the gear icon to add your first one.</p>
+        </div>`;
+      return;
+    }
+
+    // group by group field
+    const groups = {};
+    list.forEach(c => {
+      const g = c.group || "Uncategorized";
+      if(!groups[g]) groups[g] = [];
+      groups[g].push(c);
+    });
+    const groupKeys = Object.keys(groups).sort((a,b) => {
+      if(a === "Uncategorized") return 1;
+      if(b === "Uncategorized") return -1;
+      return a.localeCompare(b);
+    });
+
+    let html = '';
+    groupKeys.forEach(g => {
+      const items = groups[g];
+      html += `<div class="group-section">`;
+      html += `<div class="group-title"><span>${escapeHtml(g)}</span> <span class="count">${items.length}</span></div>`;
+      html += `<div class="grid">`;
+      items.forEach((c, i) => {
+        html += `
+          <div class="cert-card" style="animation-delay:${Math.min(i*45,400)}ms" data-id="${c.id}">
+            <div class="cert-thumb">
+              <iframe src="${drivePreviewUrl(c.driveId)}" loading="lazy"></iframe>
+              <span class="open-hint"><i class="fa-solid fa-expand"></i> View</span>
+            </div>
+            <div class="cert-info">
+              <p class="cert-name" title="${escapeHtml(c.name)}">${escapeHtml(c.name)}</p>
+              <p class="cert-date"><i class="fa-regular fa-calendar"></i><span class="date-text">${fmtMonthYear(c.uploadDate)}</span></p>
+            </div>
+          </div>
+        `;
+      });
+      html += `</div></div>`;
+    });
+
+    container.innerHTML = html;
+
+    // attach click listeners
+    $$(".cert-card", container).forEach(card=>{
+      card.addEventListener("click", ()=> openViewer(card.dataset.id));
+    });
+  }
+
+  /* ============================= PDF VIEWER ============================= */
+  function openViewer(id){
+    const cert = certs.find(c=>c.id===id);
+    if(!cert) return;
+    $("#viewerTitle").textContent = cert.name;
+    $("#viewerFrame").src = drivePreviewUrl(cert.driveId);
+    $("#viewerDownload").onclick = ()=> window.open(driveDownloadUrl(cert.driveId), "_blank");
+    $("#viewerOverlay").classList.add("show");
+    document.body.style.overflow = "hidden";
+  }
+  function closeViewer(){
+    $("#viewerOverlay").classList.remove("show");
+    document.body.style.overflow = "";
+    setTimeout(()=> $("#viewerFrame").src = "about:blank", 350);
+  }
+  $("#viewerClose").addEventListener("click", closeViewer);
+  $("#viewerOverlay").addEventListener("click", e=>{ if(e.target.id==="viewerOverlay") closeViewer(); });
+
+  /* ============================= ADMIN LOGIN ============================= */
+  const adminOverlay = $("#adminOverlay");
+  let isUnlocked = false;
+
+  function getPwHash(){ return localStorage.getItem(PW_HASH_KEY) || DEFAULT_PW_HASH; }
+
+  function openAdmin(){
+    adminOverlay.classList.add("show");
+    document.body.style.overflow = "hidden";
+    isUnlocked ? showPanel() : showLogin();
+  }
+  function closeAdmin(){
+    adminOverlay.classList.remove("show");
+    document.body.style.overflow = "";
+  }
+  function showLogin(){
+    $("#adminTitle").textContent = "Admin Access";
+    $("#loginView").style.display = "block";
+    $("#panelView").style.display = "none";
+    $("#pwInput").value = "";
+    $("#pwError").style.display = "none";
+    setTimeout(()=> $("#pwInput").focus(), 350);
+  }
+  function showPanel(){
+    $("#adminTitle").textContent = "Admin Panel";
+    $("#loginView").style.display = "none";
+    $("#panelView").style.display = "block";
+    renderManageList();
+  }
+
+  $("#gearBtn").addEventListener("click", openAdmin);
+  $("#adminClose").addEventListener("click", closeAdmin);
+  adminOverlay.addEventListener("click", e=>{ if(e.target.id==="adminOverlay") closeAdmin(); });
+
+  async function attemptLogin(){
+    const val = $("#pwInput").value;
+    if(!val) return;
+    const hash = await sha256Hex(val);
+    if(hash === getPwHash()){
+      isUnlocked = true;
+      showPanel();
+    }else{
+      $("#pwError").style.display = "flex";
+      $("#pwInput").value = "";
+      $("#pwInput").focus();
+    }
+  }
+  $("#pwSubmit").addEventListener("click", attemptLogin);
+  $("#pwInput").addEventListener("keydown", e=>{ if(e.key==="Enter") attemptLogin(); });
+  $("#lockOutBtn").addEventListener("click", ()=>{ isUnlocked = false; showLogin(); });
+
+  /* ============================= ADMIN TABS ============================= */
+  $$(".admin-tab").forEach(tab=>{
+    tab.addEventListener("click", ()=>{
+      $$(".admin-tab").forEach(t=>t.classList.remove("active"));
+      tab.classList.add("active");
+      $$(".admin-view").forEach(v=>v.classList.remove("active"));
+      $("#"+tab.dataset.view).classList.add("active");
+      if(tab.dataset.view === "manageView") renderManageList();
+    });
+  });
+
+  $("#draftPublishBtn").addEventListener("click", ()=>{
+    openAdmin();
+    if(isUnlocked){
+      $$(".admin-tab").forEach(t=>t.classList.remove("active"));
+      $(".admin-tab[data-view='publishView']").classList.add("active");
+      $$(".admin-view").forEach(v=>v.classList.remove("active"));
+      $("#publishView").classList.add("active");
+    }
+  });
+
+  /* ============================= ADD CERTIFICATE ============================= */
+  const nameInput = $("#certNameInput");
+  const linkInput = $("#certLinkInput");
+  const groupInput = $("#groupInput");
+
+  function updateAddButtonState(){
+    const nameOk = nameInput.value.trim().length > 0;
+    const idOk = !!extractDriveId(linkInput.value);
+    $("#linkHint").innerHTML = linkInput.value.trim().length === 0
+      ? ""
+      : idOk
+        ? '<i class="fa-solid fa-circle-check"></i> Looks good'
+        : '<i class="fa-solid fa-triangle-exclamation"></i> Couldn\'t find a file ID in that link';
+    $("#addSubmit").disabled = !(nameOk && idOk);
+  }
+  nameInput.addEventListener("input", updateAddButtonState);
+  linkInput.addEventListener("input", updateAddButtonState);
+
+  $("#addSubmit").addEventListener("click", ()=>{
+    const name = nameInput.value.trim();
+    const driveId = extractDriveId(linkInput.value);
+    const group = groupInput.value.trim() || "Uncategorized";
+    if(!name || !driveId) return;
+
+    certs.push({ id: uid(), name, driveId, group, uploadDate: new Date().toISOString() });
+    persistDraft();
+    renderPublic();
+
+    $("#addSuccess").style.display = "flex";
+    setTimeout(()=> $("#addSuccess").style.display = "none", 2400);
+
+    nameInput.value = "";
+    linkInput.value = "";
+    groupInput.value = "";
+    $("#linkHint").innerHTML = "";
+    updateAddButtonState();
+    showToast("Certificate added to this draft");
+  });
+
+  /* ============================= MANAGE (grouped, sortable) ============================= */
+  function getGroups(){
+    const groups = {};
+    certs.forEach(c => {
+      const g = c.group || "Uncategorized";
+      if(!groups[g]) groups[g] = [];
+      groups[g].push(c);
+    });
+    const keys = Object.keys(groups).sort((a,b) => {
+      if(a === "Uncategorized") return 1;
+      if(b === "Uncategorized") return -1;
+      return a.localeCompare(b);
+    });
+    const result = {};
+    keys.forEach(k => { result[k] = groups[k]; });
+    return result;
+  }
+
+  let dragState = null;
+
+  function renderManageList(){
+    const el = $("#manageList");
+    const groups = getGroups();
+    const groupKeys = Object.keys(groups);
+
+    if(groupKeys.length === 0){
+      el.innerHTML = `
+        <div class="empty-list">No certificates yet. Add one from the "Add" tab.</div>
+        <div class="add-group-area">
+          <input type="text" id="newGroupName" placeholder="New group name">
+          <button id="createGroupBtn">Create</button>
+        </div>
+      `;
+      const createBtn = $("#createGroupBtn");
+      if(createBtn) {
+        createBtn.addEventListener("click", ()=>{
+          const inp = $("#newGroupName");
+          const name = inp.value.trim();
+          if(name && !groups[name]) {
+            showToast('Group "' + name + '" created. Add a certificate with this group.');
+            inp.value = "";
+          } else if(!name) {
+            showToast("Enter a group name", true);
+          } else {
+            showToast("Group already exists", true);
+          }
+        });
+      }
+      return;
+    }
+
+    let html = '';
+    html += `<div class="add-group-area">
+      <input type="text" id="newGroupName" placeholder="New group name">
+      <button id="createGroupBtn">Create</button>
+    </div>`;
+
+    groupKeys.forEach((g, gi) => {
+      const items = groups[g] || [];
+      html += `<div class="group-container" data-group="${escapeHtml(g)}">
+        <div class="group-header" draggable="true" data-group="${escapeHtml(g)}">
+          <span><i class="fa-solid fa-grip-lines"></i> ${escapeHtml(g)} (${items.length})</span>
+          <div class="group-actions">
+            <button class="rename-group" data-group="${escapeHtml(g)}" title="Rename group"><i class="fa-solid fa-pen"></i></button>
+            <button class="del-group" data-group="${escapeHtml(g)}" title="Delete group (certificates become Uncategorized)"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        </div>
+        <div class="group-items" data-group="${escapeHtml(g)}">
+    `;
+      items.forEach((c, idx) => {
+        html += `
+          <div class="cert-list-item" data-id="${c.id}" draggable="true" data-group="${escapeHtml(g)}">
+            <span class="drag-handle"><i class="fa-solid fa-grip-lines"></i></span>
+            <div class="meta">
+              <div class="n">${escapeHtml(c.name)}</div>
+              <div class="d">
+                <span class="date-display" data-id="${c.id}">${fmtMonthYear(c.uploadDate)}</span>
+                <button class="icon-btn edit-date-btn" data-id="${c.id}" title="Edit date"><i class="fa-regular fa-calendar-pen"></i></button>
+              </div>
+            </div>
+            <div class="acts">
+              <button class="icon-btn edit" title="Edit name/link"><i class="fa-solid fa-pen"></i></button>
+              <button class="icon-btn del" title="Delete"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </div>
+        `;
+      });
+      html += `</div></div>`;
+    });
+
+    el.innerHTML = html;
+
+    // create group
+    const createBtn = $("#createGroupBtn");
+    if(createBtn) {
+      createBtn.addEventListener("click", ()=>{
+        const inp = $("#newGroupName");
+        const name = inp.value.trim();
+        if(name && !getGroups()[name]) {
+          showToast('Group "' + name + '" created. Add a certificate with this group.');
+          inp.value = "";
+        } else if(!name) {
+          showToast("Enter a group name", true);
+        } else {
+          showToast("Group already exists", true);
+        }
+      });
+    }
+
+    // rename
+    $$(".rename-group", el).forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const oldGroup = btn.dataset.group;
+        const newName = prompt("Rename group to:", oldGroup);
+        if(newName && newName.trim() && newName.trim() !== oldGroup) {
+          const trimmed = newName.trim();
+          certs.forEach(c => {
+            if((c.group || "Uncategorized") === oldGroup) c.group = trimmed;
+          });
+          persistDraft();
+          renderManageList();
+          renderPublic();
+          showToast('Group renamed to "' + trimmed + '"');
+        }
+      });
+    });
+
+    // delete group
+    $$(".del-group", el).forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const g = btn.dataset.group;
+        if(!confirm(`Delete group "${g}"? All certificates in it will become "Uncategorized".`)) return;
+        certs.forEach(c => {
+          if((c.group || "Uncategorized") === g) c.group = "Uncategorized";
+        });
+        persistDraft();
+        renderManageList();
+        renderPublic();
+        showToast('Group "' + g + '" removed');
+      });
+    });
+
+    // group drag
+    $$(".group-header", el).forEach(header => {
+      header.addEventListener("dragstart", (e) => {
+        dragState = { type: 'group', group: header.dataset.group };
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', header.dataset.group);
+        header.style.opacity = '0.5';
+      });
+      header.addEventListener("dragend", (e) => {
+        header.style.opacity = '1';
+      });
+    });
+
+    // group drop
+    $$(".group-items", el).forEach(container => {
+      container.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+      });
+      container.addEventListener("drop", (e) => {
+        e.preventDefault();
+        if(!dragState) return;
+        const targetGroup = container.dataset.group;
+        if(dragState.type === 'group') {
+          const fromGroup = dragState.group;
+          if(fromGroup === targetGroup) return;
+          const allGroups = Object.keys(getGroups());
+          const fromIdx = allGroups.indexOf(fromGroup);
+          const toIdx = allGroups.indexOf(targetGroup);
+          if(fromIdx === -1 || toIdx === -1) return;
+          certs.forEach(c => {
+            const g = c.group || "Uncategorized";
+            if(g === fromGroup) c.group = targetGroup;
+            else if(g === targetGroup) c.group = fromGroup;
+          });
+          persistDraft();
+          renderManageList();
+          renderPublic();
+          showToast('Groups reordered');
+          dragState = null;
+        }
+      });
+    });
+
+    // item drag
+    $$(".cert-list-item", el).forEach(item => {
+      item.addEventListener("dragstart", (e) => {
+        dragState = { type: 'item', id: item.dataset.id, fromGroup: item.dataset.group };
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', item.dataset.id);
+        item.classList.add('dragging');
+      });
+      item.addEventListener("dragend", (e) => {
+        item.classList.remove('dragging');
+      });
+    });
+
+    // item drop
+    $$(".group-items", el).forEach(container => {
+      container.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+      });
+      container.addEventListener("drop", (e) => {
+        e.preventDefault();
+        if(!dragState || dragState.type !== 'item') return;
+        const targetGroup = container.dataset.group;
+        const itemId = dragState.id;
+        const fromGroup = dragState.fromGroup;
+        if(!itemId || !targetGroup) return;
+        const cert = certs.find(c => c.id === itemId);
+        if(!cert) return;
+        if(fromGroup === targetGroup) {
+          // reorder within same group: move to end
+          const groupCerts = certs.filter(c => (c.group || "Uncategorized") === targetGroup);
+          const itemIndex = groupCerts.findIndex(c => c.id === itemId);
+          if(itemIndex === -1) return;
+          groupCerts.splice(itemIndex, 1);
+          groupCerts.push(cert);
+          const otherCerts = certs.filter(c => (c.group || "Uncategorized") !== targetGroup);
+          certs = [...otherCerts, ...groupCerts];
+          persistDraft();
+          renderManageList();
+          renderPublic();
+          showToast('Reordered within group');
+          dragState = null;
+          return;
+        }
+        cert.group = targetGroup;
+        persistDraft();
+        renderManageList();
+        renderPublic();
+        showToast('Moved to "' + targetGroup + '"');
+        dragState = null;
+      });
+    });
+
+    // item edit/delete/date
+    $$(".cert-list-item", el).forEach(item => {
+      const id = item.dataset.id;
+      item.querySelector(".edit")?.addEventListener("click", ()=> openEdit(id));
+      item.querySelector(".del")?.addEventListener("click", ()=> deleteCert(id));
+      const dateBtn = item.querySelector(".edit-date-btn");
+      if(dateBtn){
+        dateBtn.addEventListener("click", (e)=>{
+          e.stopPropagation();
+          startInlineDateEdit(id, item);
+        });
+      }
+    });
+  }
+
+  /* ===== inline date edit ===== */
+  function startInlineDateEdit(certId, listItem){
+    const cert = certs.find(c => c.id === certId);
+    if(!cert) return;
+    const dateDisplay = listItem.querySelector('.date-display');
+    if(!dateDisplay) return;
+    const currentDate = cert.uploadDate ? new Date(cert.uploadDate) : new Date();
+    const iso = currentDate.toISOString().split('T')[0];
+
+    const wrapper = document.createElement('span');
+    wrapper.className = 'inline-date-edit';
+    const input = document.createElement('input');
+    input.type = 'date';
+    input.value = iso;
+    const saveBtn = document.createElement('button');
+    saveBtn.className = 'save-date-btn';
+    saveBtn.textContent = 'Save';
+    saveBtn.type = 'button';
+    const cancelBtn = document.createElement('button');
+    cancelBtn.className = 'cancel-date-btn';
+    cancelBtn.textContent = 'Cancel';
+    cancelBtn.type = 'button';
+    wrapper.appendChild(input);
+    wrapper.appendChild(saveBtn);
+    wrapper.appendChild(cancelBtn);
+    const parent = dateDisplay.parentNode;
+    parent.replaceChild(wrapper, dateDisplay);
+    input.focus();
+    input.select();
+
+    const finish = (save) => {
+      if(save){
+        const newVal = input.value;
+        if(newVal){
+          const newDate = new Date(newVal + 'T00:00:00Z');
+          if(!isNaN(newDate.getTime())){
+            cert.uploadDate = newDate.toISOString();
+            persistDraft();
+            renderManageList();
+            renderPublic();
+            showToast('Date updated');
+            return;
+          }
+        }
+        showToast('Invalid date', true);
+      }
+      renderManageList();
+    };
+    saveBtn.addEventListener('click', (e) => { e.stopPropagation(); finish(true); });
+    cancelBtn.addEventListener('click', (e) => { e.stopPropagation(); finish(false); });
+    input.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter'){ e.preventDefault(); finish(true); }
+      else if(e.key === 'Escape'){ e.preventDefault(); finish(false); }
+    });
+  }
+
+  function deleteCert(id){
+    const cert = certs.find(c=>c.id===id);
+    if(!cert) return;
+    if(!confirm('Delete "' + cert.name + '"? This can\'t be undone.')) return;
+    certs = certs.filter(c=>c.id!==id);
+    persistDraft();
+    renderManageList();
+    renderPublic();
+    showToast("Deleted from this draft");
+  }
+
+  /* ============================= EDIT MODAL ============================= */
+  const editOverlay = $("#editOverlay");
+  let editingId = null;
+
+  function openEdit(id){
+    const cert = certs.find(c=>c.id===id);
+    if(!cert) return;
+    editingId = id;
+    $("#editNameInput").value = cert.name;
+    $("#editLinkInput").value = "https://drive.google.com/file/d/" + cert.driveId + "/view?usp=sharing";
+    $("#editGroupInput").value = cert.group || "";
+    editOverlay.classList.add("show");
+    setTimeout(()=> $("#editNameInput").focus(), 300);
+  }
+  function closeEdit(){ editOverlay.classList.remove("show"); editingId = null; }
+  $("#editClose").addEventListener("click", closeEdit);
+  editOverlay.addEventListener("click", e=>{ if(e.target.id==="editOverlay") closeEdit(); });
+
+  $("#editSave").addEventListener("click", ()=>{
+    const newName = $("#editNameInput").value.trim();
+    const newId = extractDriveId($("#editLinkInput").value);
+    const newGroup = $("#editGroupInput").value.trim() || "Uncategorized";
+    if(!newName || !newId || !editingId) { showToast("Check the name and link.", true); return; }
+    const cert = certs.find(c=>c.id===editingId);
+    if(cert){
+      cert.name = newName;
+      cert.driveId = newId;
+      cert.group = newGroup;
+      persistDraft();
+      renderManageList();
+      renderPublic();
+      showToast("Updated in this draft");
+    }
+    closeEdit();
+  });
+  $("#editNameInput").addEventListener("keydown", e=>{ if(e.key==="Enter") $("#editSave").click(); });
+
+  /* ============================= PUBLISH ============================= */
+  async function publishSite(){
+    let html;
+    try{
+      const res = await fetch(location.href, { cache: "no-store" });
+      if(!res.ok) throw new Error("bad status");
+      html = await res.text();
+    }catch(e){
+      showToast("Couldn't fetch this page's source (works once hosted online). Try 'Copy Certificate Data' instead.", true);
+      return;
+    }
+
+    const jsonStr = JSON.stringify(certs, null, 2);
+    const pattern = /(<script id="cert-data" type="application\/json">)[\s\S]*?(<\/script>)/;
+    if(!pattern.test(html)){
+      showToast("Couldn't find the data block to update — publish manually instead.", true);
+      return;
+    }
+    const newHtml = html.replace(pattern, function(m, a, c){ return a + "\n" + jsonStr + "\n" + c; });
+
+    const blob = new Blob([newHtml], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = "certificates.html";
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+
+    publishedCerts = JSON.parse(JSON.stringify(certs));
+    localStorage.removeItem(DRAFT_KEY);
+    updateDraftUI();
+    showToast("Downloaded — upload this file to GitHub Pages to publish");
+  }
+  $("#publishBtn").addEventListener("click", publishSite);
+
+  $("#copyDataBtn").addEventListener("click", async ()=>{
+    const jsonStr = JSON.stringify(certs, null, 2);
+    try{
+      await navigator.clipboard.writeText(jsonStr);
+      showToast("Copied — paste into the cert-data script tag");
+    }catch(e){
+      showToast("Couldn't copy automatically — select and copy manually.", true);
+    }
+  });
+
+  /* ============================= SECURITY ============================= */
+  $("#changePwBtn").addEventListener("click", async ()=>{
+    const p1 = $("#newPwInput").value;
+    const p2 = $("#confirmPwInput").value;
+    if(!p1 || p1.length < 3){ showToast("Password must be at least 3 characters.", true); return; }
+    if(p1 !== p2){ showToast("Passwords don't match.", true); return; }
+    const hash = await sha256Hex(p1);
+    localStorage.setItem(PW_HASH_KEY, hash);
+    $("#newPwInput").value = "";
+    $("#confirmPwInput").value = "";
+    $("#pwChangeSuccess").style.display = "flex";
+    setTimeout(()=> $("#pwChangeSuccess").style.display = "none", 2400);
+    showToast("Password changed on this device — publish to bake it into the file");
+  });
+
+  /* ============================= KEYBOARD ============================= */
+  document.addEventListener("keydown", e=>{
+    if(e.key === "Escape"){
+      if($("#viewerOverlay").classList.contains("show")) closeViewer();
+      else if(editOverlay.classList.contains("show")) closeEdit();
+      else if(adminOverlay.classList.contains("show")) closeAdmin();
+    }
+  });
+
+  /* ============================= INIT ============================= */
+  renderPublic();
+  updateDraftUI();
+
+})();
+</script>
+
+</body></html>
